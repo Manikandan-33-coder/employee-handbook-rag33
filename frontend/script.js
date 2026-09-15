@@ -1,10 +1,8 @@
-javascript
 // =========================================================
 // FastAPI Backend URL
 // =========================================================
 
-// Deployed Render backend
-const API_URL = "https://employee-handbook-rag33-4.onrender.com/ask";
+const API_URL = "http://127.0.0.1:8000/ask";
 
 
 // =========================================================
@@ -20,11 +18,13 @@ const loading = document.getElementById("loading");
 
 const clearChatButton = document.getElementById("clearChat");
 
-const quickCards = document.querySelectorAll(".quick-card");
+const suggestionCards = document.querySelectorAll(
+    ".suggestion-card"
+);
 
 
 // =========================================================
-// Add Message
+// Add Message to Chat
 // =========================================================
 
 function addMessage(message, sender) {
@@ -36,6 +36,7 @@ function addMessage(message, sender) {
         sender
     );
 
+
     const messageContent = document.createElement("div");
 
     messageContent.classList.add(
@@ -44,13 +45,11 @@ function addMessage(message, sender) {
 
     messageContent.textContent = message;
 
-    messageWrapper.appendChild(
-        messageContent
-    );
 
-    chatMessages.appendChild(
-        messageWrapper
-    );
+    messageWrapper.appendChild(messageContent);
+
+    chatMessages.appendChild(messageWrapper);
+
 
     // Scroll to latest message
     chatMessages.scrollTop =
@@ -67,11 +66,13 @@ function showLoading() {
     loading.classList.remove("hidden");
 
     askButton.disabled = true;
+
     questionInput.disabled = true;
 
-    quickCards.forEach(card => {
-        card.disabled = true;
-    });
+    // Disable suggestion cards while processing
+    suggestionCards.forEach(
+        card => card.disabled = true
+    );
 }
 
 
@@ -84,32 +85,35 @@ function hideLoading() {
     loading.classList.add("hidden");
 
     askButton.disabled = false;
+
     questionInput.disabled = false;
 
-    quickCards.forEach(card => {
-        card.disabled = false;
-    });
+    // Enable suggestion cards
+    suggestionCards.forEach(
+        card => card.disabled = false
+    );
 
     questionInput.focus();
 }
 
 
 // =========================================================
-// Ask Question
+// Send Question to FastAPI
 // =========================================================
 
 async function askQuestion(question) {
 
     try {
 
-        // Show user question
+        showLoading();
+
+
+        // Display user question
         addMessage(
             question,
             "user"
         );
 
-        // Show loading
-        showLoading();
 
         // Send request to FastAPI
         const response = await fetch(
@@ -127,7 +131,8 @@ async function askQuestion(question) {
             }
         );
 
-        // Check server response
+
+        // Handle HTTP errors
         if (!response.ok) {
 
             const errorData =
@@ -141,15 +146,18 @@ async function askQuestion(question) {
             );
         }
 
-        // Convert response to JSON
+
+        // Read JSON response
         const data =
             await response.json();
 
-        // Show AI answer
+
+        // Display AI response
         addMessage(
             data.answer,
             "assistant"
         );
+
 
     } catch (error) {
 
@@ -158,14 +166,17 @@ async function askQuestion(question) {
             error
         );
 
+
         addMessage(
             `Sorry, something went wrong: ${error.message}`,
             "assistant"
         );
 
+
     } finally {
 
         hideLoading();
+
     }
 }
 
@@ -180,28 +191,33 @@ questionForm.addEventListener(
 
         event.preventDefault();
 
+
         const question =
             questionInput.value.trim();
 
-        // Ignore empty input
+
+        // Ignore empty questions
         if (!question) {
             return;
         }
 
+
         // Clear input
         questionInput.value = "";
 
+
         // Ask question
         await askQuestion(question);
+
     }
 );
 
 
 // =========================================================
-// Quick Action Cards
+// Suggested Question Cards
 // =========================================================
 
-quickCards.forEach(
+suggestionCards.forEach(
     card => {
 
         card.addEventListener(
@@ -211,15 +227,29 @@ quickCards.forEach(
                 const question =
                     card.dataset.question;
 
+
                 if (!question) {
                     return;
                 }
 
+
+                // Put question into input
+                questionInput.value =
+                    question;
+
+
+                // Clear input after selecting
+                questionInput.value = "";
+
+
+                // Send question
                 await askQuestion(
                     question
                 );
+
             }
         );
+
     }
 );
 
@@ -239,7 +269,8 @@ if (clearChatButton) {
             questionInput.value = "";
 
             questionInput.focus();
+
         }
     );
-}
 
+}
