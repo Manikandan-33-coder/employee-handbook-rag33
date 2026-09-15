@@ -1,3 +1,4 @@
+css
 /* =========================================================
    GLOBAL
 ========================================================= */
@@ -27,15 +28,33 @@ body {
     color: #172033;
 
     background:
-        radial-gradient(circle at 20% 20%,
+        radial-gradient(
+            circle at 20% 20%,
             rgba(99, 102, 241, 0.16),
-            transparent 30%),
-        radial-gradient(circle at 80% 80%,
+            transparent 30%
+        ),
+        radial-gradient(
+            circle at 80% 80%,
             rgba(124, 58, 237, 0.13),
-            transparent 30%),
+            transparent 30%
+        ),
         #f4f6fb;
 
     overflow-x: hidden;
+}
+
+
+/* =========================================================
+   GLOBAL INTERACTION FIX
+========================================================= */
+
+button,
+input {
+    font-family: inherit;
+}
+
+button {
+    -webkit-tap-highlight-color: transparent;
 }
 
 
@@ -101,6 +120,7 @@ body {
 
 .phone-frame {
     position: relative;
+    z-index: 2;
 
     width: 420px;
     height: 820px;
@@ -144,6 +164,8 @@ body {
     background: #2c3443;
 
     z-index: 20;
+
+    pointer-events: none;
 }
 
 
@@ -167,6 +189,9 @@ body {
     backdrop-filter: blur(16px);
 
     flex-shrink: 0;
+
+    position: relative;
+    z-index: 10;
 }
 
 .header-left {
@@ -191,9 +216,11 @@ body {
     border-radius: 12px;
 
     background:
-        linear-gradient(135deg,
+        linear-gradient(
+            135deg,
             #111827,
-            #39465c);
+            #39465c
+        );
 
     color: #fff;
 
@@ -202,6 +229,8 @@ body {
 
     box-shadow:
         0 6px 14px rgba(17, 24, 39, 0.16);
+
+    pointer-events: none;
 }
 
 .company-info {
@@ -287,8 +316,10 @@ body {
 
     cursor: pointer;
 
-    transition:
-        0.2s ease;
+    transition: 0.2s ease;
+
+    position: relative;
+    z-index: 11;
 }
 
 .icon-button:hover {
@@ -313,6 +344,9 @@ body {
 
     scrollbar-color:
         #cbd2dc transparent;
+
+    position: relative;
+    z-index: 3;
 }
 
 .chat-area::-webkit-scrollbar {
@@ -336,6 +370,9 @@ body {
     max-width: 320px;
 
     margin: 18px auto 25px;
+
+    position: relative;
+    z-index: 4;
 }
 
 .ai-orb {
@@ -351,9 +388,11 @@ body {
     border-radius: 24px;
 
     background:
-        linear-gradient(135deg,
+        linear-gradient(
+            135deg,
             #edf0ff,
-            #f5edff);
+            #f5edff
+        );
 
     border: 1px solid #e1e5f8;
 
@@ -361,6 +400,8 @@ body {
         0 15px 35px rgba(90, 89, 180, 0.12);
 
     animation: floatOrb 4s ease-in-out infinite;
+
+    pointer-events: none;
 }
 
 .orb-inner {
@@ -374,9 +415,11 @@ body {
     border-radius: 16px;
 
     background:
-        linear-gradient(135deg,
+        linear-gradient(
+            135deg,
             #5b5de6,
-            #7c3aed);
+            #7c3aed
+        );
 
     color: #fff;
 
@@ -384,6 +427,8 @@ body {
 
     box-shadow:
         0 8px 18px rgba(91, 93, 230, 0.22);
+
+    pointer-events: none;
 }
 
 @keyframes floatOrb {
@@ -415,6 +460,8 @@ body {
     font-weight: 800;
 
     letter-spacing: 0.12em;
+
+    pointer-events: none;
 }
 
 .welcome h2 {
@@ -435,9 +482,11 @@ body {
     margin-top: 3px;
 
     background:
-        linear-gradient(90deg,
+        linear-gradient(
+            90deg,
             #5257df,
-            #7c3aed);
+            #7c3aed
+        );
 
     background-clip: text;
     -webkit-background-clip: text;
@@ -468,6 +517,9 @@ body {
     gap: 9px;
 
     margin-bottom: 18px;
+
+    position: relative;
+    z-index: 5;
 }
 
 .quick-card {
@@ -497,6 +549,8 @@ body {
         transform 0.22s ease,
         border-color 0.22s ease,
         box-shadow 0.22s ease;
+
+    pointer-events: auto;
 }
 
 .quick-card:hover {
@@ -537,6 +591,8 @@ body {
     color: #6266dd;
 
     font-size: 15px;
+
+    pointer-events: none;
 }
 
 .quick-content {
@@ -546,6 +602,8 @@ body {
     flex-direction: column;
 
     gap: 2px;
+
+    pointer-events: none;
 }
 
 .quick-content strong {
@@ -580,6 +638,8 @@ body {
     transition:
         transform 0.2s ease,
         color 0.2s ease;
+
+    pointer-events: none;
 }
 
 .quick-card:hover .quick-arrow {
@@ -601,6 +661,9 @@ body {
     gap: 12px;
 
     width: 100%;
+
+    position: relative;
+    z-index: 5;
 }
 
 .message {
@@ -656,9 +719,11 @@ body {
     color: #fff;
 
     background:
-        linear-gradient(135deg,
+        linear-gradient(
+            135deg,
             #151d2d,
-            #344158);
+            #344158
+        );
 
     border-bottom-right-radius: 4px;
 
@@ -692,6 +757,9 @@ body {
     gap: 8px;
 
     margin: 12px 0;
+
+    position: relative;
+    z-index: 5;
 }
 
 .message-avatar {
@@ -786,6 +854,9 @@ body {
 ========================================================= */
 
 .input-area {
+    position: relative;
+    z-index: 50;
+
     flex-shrink: 0;
 
     padding: 10px 14px 9px;
@@ -793,12 +864,17 @@ body {
     border-top: 1px solid #e7eaf0;
 
     background:
-        rgba(255, 255, 255, 0.96);
+        rgba(255, 255, 255, 0.98);
 
     backdrop-filter: blur(12px);
+
+    pointer-events: auto;
 }
 
 .question-form {
+    position: relative;
+    z-index: 51;
+
     display: flex;
 
     align-items: center;
@@ -819,6 +895,8 @@ body {
     transition:
         border-color 0.2s ease,
         box-shadow 0.2s ease;
+
+    pointer-events: auto;
 }
 
 .question-form:focus-within {
@@ -829,6 +907,9 @@ body {
 }
 
 .input-wrapper {
+    position: relative;
+    z-index: 52;
+
     flex: 1;
 
     min-width: 0;
@@ -838,6 +919,8 @@ body {
     align-items: center;
 
     gap: 7px;
+
+    pointer-events: auto;
 }
 
 .input-symbol {
@@ -857,12 +940,21 @@ body {
     color: #6468dc;
 
     font-size: 11px;
+
+    pointer-events: none;
 }
 
 .question-form input {
+    position: relative;
+    z-index: 53;
+
     width: 100%;
 
     min-width: 0;
+
+    height: 34px;
+
+    padding: 0 4px;
 
     border: none;
 
@@ -873,13 +965,30 @@ body {
     color: #172033;
 
     font-size: 11px;
+
+    font-family: inherit;
+
+    cursor: text;
+
+    pointer-events: auto;
+
+    user-select: text;
+
+    -webkit-user-select: text;
+
+    opacity: 1;
 }
 
 .question-form input::placeholder {
     color: #9aa4b2;
+
+    opacity: 1;
 }
 
 .send-button {
+    position: relative;
+    z-index: 54;
+
     width: 34px;
     height: 34px;
 
@@ -894,15 +1003,19 @@ body {
     border-radius: 11px;
 
     background:
-        linear-gradient(135deg,
+        linear-gradient(
+            135deg,
             #111827,
-            #354157);
+            #354157
+        );
 
     color: #fff;
 
     font-size: 17px;
 
     cursor: pointer;
+
+    pointer-events: auto;
 
     transition:
         transform 0.18s ease,
@@ -942,6 +1055,8 @@ body {
     font-size: 7px;
 
     color: #9ca5b4;
+
+    pointer-events: none;
 }
 
 .secure-mark {
@@ -968,6 +1083,9 @@ body {
     border-top: 1px solid #e9ecf1;
 
     background: #ffffff;
+
+    position: relative;
+    z-index: 20;
 }
 
 .nav-item {
@@ -980,6 +1098,8 @@ body {
     font-size: 9px;
 
     color: #9ba3b0;
+
+    pointer-events: none;
 }
 
 .nav-item.active {
@@ -997,6 +1117,8 @@ body {
     height: 18px;
 
     background: #e7eaf0;
+
+    pointer-events: none;
 }
 
 
@@ -1006,6 +1128,11 @@ body {
 
 .showcase-info {
     width: 340px;
+
+    position: relative;
+    z-index: 1;
+
+    pointer-events: none;
 }
 
 .showcase-badge {
@@ -1044,9 +1171,11 @@ body {
     margin-top: 3px;
 
     background:
-        linear-gradient(90deg,
+        linear-gradient(
+            90deg,
             #5559df,
-            #7c3aed);
+            #7c3aed
+        );
 
     background-clip: text;
     -webkit-background-clip: text;
@@ -1201,4 +1330,23 @@ body {
     .message-content {
         max-width: 88%;
     }
+
+    .input-area {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    .question-form {
+        gap: 5px;
+    }
+
+    .question-form input {
+        font-size: 12px;
+    }
+
+    .send-button {
+        width: 36px;
+        height: 36px;
+    }
 }
+
