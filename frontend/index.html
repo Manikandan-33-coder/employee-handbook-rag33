@@ -59,6 +59,8 @@
             <header class="app-header">
 
 
+                <!-- HEADER LEFT -->
+
                 <div class="header-left">
 
 
@@ -69,7 +71,7 @@
                     </div>
 
 
-                    <!-- AI NAME -->
+                    <!-- AI ASSISTANT NAME -->
 
                     <div class="company-info">
 
@@ -93,7 +95,7 @@
                 <div class="header-right">
 
 
-                    <!-- ONLINE -->
+                    <!-- ONLINE STATUS -->
 
                     <div class="online-status">
 
@@ -110,8 +112,8 @@
                         type="button"
                         id="clearChat"
                         class="icon-button"
-                        title="New conversation"
-                        aria-label="New conversation"
+                        title="New Chat"
+                        aria-label="New Chat"
                     >
 
                         ↻
@@ -130,8 +132,10 @@
                  CHAT AREA
             ================================================== -->
 
-            <div class="chat-area"
-                 id="chatArea">
+            <div
+                class="chat-area"
+                id="chatArea"
+            >
 
 
                 <!-- =================================================
@@ -162,9 +166,7 @@
                     <!-- ONLY WELCOME TEXT -->
 
                     <h2>
-
                         How can I help you?
-
                     </h2>
 
 
@@ -182,7 +184,10 @@
                     aria-live="polite"
                 >
 
-                    <!-- JavaScript messages appear here -->
+                    <!--
+                        JavaScript will insert
+                        user and assistant messages here.
+                    -->
 
                 </section>
 
@@ -220,9 +225,7 @@
 
 
                         <span>
-
                             Searching handbook...
-
                         </span>
 
 
@@ -249,20 +252,20 @@
                 >
 
 
+                    <!-- INPUT -->
+
                     <div class="input-wrapper">
 
 
                         <span class="input-symbol">
-
                             ✦
-
                         </span>
 
 
                         <input
                             type="text"
                             id="questionInput"
-                            placeholder="Ask the handbook..."
+                            placeholder="Ask anything..."
                             autocomplete="off"
                             required
                         >
@@ -272,7 +275,7 @@
 
 
 
-                    <!-- SEND BUTTON -->
+                    <!-- SEND -->
 
                     <button
                         type="submit"
@@ -281,9 +284,7 @@
                         aria-label="Send question"
                     >
 
-                        <span>
-                            →
-                        </span>
+                        →
 
                     </button>
 
@@ -292,16 +293,16 @@
 
 
 
-                <!-- INPUT INFORMATION -->
+                <!-- INPUT HINT -->
 
                 <div class="input-hint">
 
                     <span>
-                        Employee Handbook
+                        AI Assistant
                     </span>
 
-                    <span class="secure-mark">
-                        ◇
+                    <span>
+                        •
                     </span>
 
                     <span>
