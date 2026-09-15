@@ -2,30 +2,25 @@
 // FastAPI Backend URL
 // =========================================================
 
-const API_URL ="http://127.0.0.1:8000/ask";
+const API_URL = "http://127.0.0.1:8000/ask";
 
 
 // =========================================================
 // Get HTML Elements
 // =========================================================
 
-const questionForm =
-    document.getElementById("questionForm");
+const questionForm = document.getElementById("questionForm");
+const questionInput = document.getElementById("questionInput");
+const askButton = document.getElementById("askButton");
 
-const questionInput =
-    document.getElementById("questionInput");
+const chatMessages = document.getElementById("chatMessages");
+const loading = document.getElementById("loading");
 
-const askButton =
-    document.getElementById("askButton");
+const clearChatButton = document.getElementById("clearChat");
 
-const chatMessages =
-    document.getElementById("chatMessages");
-
-const loading =
-    document.getElementById("loading");
-
-const clearChatButton =
-    document.getElementById("clearChat");
+const suggestionCards = document.querySelectorAll(
+    ".suggestion-card"
+);
 
 
 // =========================================================
@@ -34,8 +29,7 @@ const clearChatButton =
 
 function addMessage(message, sender) {
 
-    const messageWrapper =
-        document.createElement("div");
+    const messageWrapper = document.createElement("div");
 
     messageWrapper.classList.add(
         "message",
@@ -43,35 +37,23 @@ function addMessage(message, sender) {
     );
 
 
-    const messageContent =
-        document.createElement("div");
+    const messageContent = document.createElement("div");
 
     messageContent.classList.add(
         "message-content"
     );
 
-
-    messageContent.textContent =
-        message;
+    messageContent.textContent = message;
 
 
-    messageWrapper.appendChild(
-        messageContent
-    );
+    messageWrapper.appendChild(messageContent);
 
-
-    chatMessages.appendChild(
-        messageWrapper
-    );
+    chatMessages.appendChild(messageWrapper);
 
 
     // Scroll to latest message
-    setTimeout(() => {
-
-        chatMessages.scrollTop =
-            chatMessages.scrollHeight;
-
-    }, 50);
+    chatMessages.scrollTop =
+        chatMessages.scrollHeight;
 }
 
 
@@ -81,15 +63,16 @@ function addMessage(message, sender) {
 
 function showLoading() {
 
-    loading.classList.remove(
-        "hidden"
+    loading.classList.remove("hidden");
+
+    askButton.disabled = true;
+
+    questionInput.disabled = true;
+
+    // Disable suggestion cards while processing
+    suggestionCards.forEach(
+        card => card.disabled = true
     );
-
-    askButton.disabled =
-        true;
-
-    questionInput.disabled =
-        true;
 }
 
 
@@ -99,15 +82,16 @@ function showLoading() {
 
 function hideLoading() {
 
-    loading.classList.add(
-        "hidden"
+    loading.classList.add("hidden");
+
+    askButton.disabled = false;
+
+    questionInput.disabled = false;
+
+    // Enable suggestion cards
+    suggestionCards.forEach(
+        card => card.disabled = false
     );
-
-    askButton.disabled =
-        false;
-
-    questionInput.disabled =
-        false;
 
     questionInput.focus();
 }
@@ -121,7 +105,6 @@ async function askQuestion(question) {
 
     try {
 
-        // Show loading
         showLoading();
 
 
@@ -133,93 +116,43 @@ async function askQuestion(question) {
 
 
         // Send request to FastAPI
-        const response =
-            await fetch(
-                API_URL,
-                {
-                    method: "POST",
+        const response = await fetch(
+            API_URL,
+            {
+                method: "POST",
 
-                    headers: {
-                        "Content-Type":
-                            "application/json"
-                    },
+                headers: {
+                    "Content-Type": "application/json"
+                },
 
-                    body:
-                        JSON.stringify({
-                            question:
-                                question
-                        })
-                }
-            );
+                body: JSON.stringify({
+                    question: question
+                })
+            }
+        );
 
 
-        // =====================================================
-        // Handle HTTP Error
-        // =====================================================
-
+        // Handle HTTP errors
         if (!response.ok) {
 
-            let errorMessage =
-                `Server error: ${response.status}`;
-
-
-            try {
-
-                const errorData =
-                    await response.json();
-
-
-                if (errorData.detail) {
-
-                    errorMessage =
-                        errorData.detail;
-
-                }
-
-            } catch (error) {
-
-                console.error(
-                    "Could not read error response:",
-                    error
-                );
-
-            }
-
+            const errorData =
+                await response
+                    .json()
+                    .catch(() => null);
 
             throw new Error(
-                errorMessage
+                errorData?.detail ||
+                `Server error: ${response.status}`
             );
         }
 
 
-        // =====================================================
-        // Read JSON Response
-        // =====================================================
-
+        // Read JSON response
         const data =
             await response.json();
 
 
-        // =====================================================
-        // Check AI Answer
-        // =====================================================
-
-        if (
-            data.answer === undefined ||
-            data.answer === null
-        ) {
-
-            throw new Error(
-                "The backend did not return an answer."
-            );
-
-        }
-
-
-        // =====================================================
-        // Display AI Response
-        // =====================================================
-
+        // Display AI response
         addMessage(
             data.answer,
             "assistant"
@@ -234,18 +167,14 @@ async function askQuestion(question) {
         );
 
 
-        // Display error in chatbot
         addMessage(
-
             `Sorry, something went wrong: ${error.message}`,
-
             "assistant"
-
         );
+
 
     } finally {
 
-        // Hide loading
         hideLoading();
 
     }
@@ -256,41 +185,73 @@ async function askQuestion(question) {
 // Form Submit
 // =========================================================
 
-if (questionForm) {
+questionForm.addEventListener(
+    "submit",
+    async function (event) {
 
-    questionForm.addEventListener(
-        "submit",
-        async function(event) {
-
-            event.preventDefault();
+        event.preventDefault();
 
 
-            const question =
-                questionInput.value.trim();
+        const question =
+            questionInput.value.trim();
 
 
-            // Ignore empty questions
-            if (!question) {
+        // Ignore empty questions
+        if (!question) {
+            return;
+        }
 
-                return;
+
+        // Clear input
+        questionInput.value = "";
+
+
+        // Ask question
+        await askQuestion(question);
+
+    }
+);
+
+
+// =========================================================
+// Suggested Question Cards
+// =========================================================
+
+suggestionCards.forEach(
+    card => {
+
+        card.addEventListener(
+            "click",
+            async function () {
+
+                const question =
+                    card.dataset.question;
+
+
+                if (!question) {
+                    return;
+                }
+
+
+                // Put question into input
+                questionInput.value =
+                    question;
+
+
+                // Clear input after selecting
+                questionInput.value = "";
+
+
+                // Send question
+                await askQuestion(
+                    question
+                );
 
             }
+        );
 
-
-            // Clear input
-            questionInput.value =
-                "";
-
-
-            // Ask AI
-            await askQuestion(
-                question
-            );
-
-        }
-    );
-
-}
+    }
+);
 
 
 // =========================================================
@@ -301,96 +262,15 @@ if (clearChatButton) {
 
     clearChatButton.addEventListener(
         "click",
-        function() {
+        function () {
 
-            // Remove all messages
-            chatMessages.innerHTML =
-                "";
+            chatMessages.innerHTML = "";
 
+            questionInput.value = "";
 
-            // Clear input
-            questionInput.value =
-                "";
-
-
-            // Show welcome screen again
-            const welcome =
-                document.getElementById(
-                    "welcome"
-                );
-
-
-            if (welcome) {
-
-                welcome.style.display =
-                    "block";
-
-            }
-
-
-            // Make sure loading is hidden
-            loading.classList.add(
-                "hidden"
-            );
-
-
-            // Enable controls
-            askButton.disabled =
-                false;
-
-            questionInput.disabled =
-                false;
-
-
-            // Focus input
             questionInput.focus();
 
         }
     );
 
 }
-
-
-// =========================================================
-// Enter Key Support
-// =========================================================
-
-if (questionInput) {
-
-    questionInput.addEventListener(
-        "keydown",
-        function(event) {
-
-            if (
-                event.key === "Enter" &&
-                !event.shiftKey
-            ) {
-
-                event.preventDefault();
-
-                questionForm.requestSubmit();
-
-            }
-
-        }
-    );
-
-}
-
-
-// =========================================================
-// Initial Focus
-// =========================================================
-
-window.addEventListener(
-    "load",
-    function() {
-
-        if (questionInput) {
-
-            questionInput.focus();
-
-        }
-
-    }
-);
