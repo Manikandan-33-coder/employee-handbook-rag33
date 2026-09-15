@@ -5,7 +5,6 @@ langchain-community
 langchain-core
 langchain-text-splitters
 langchain-huggingface
-langchain-ollama
 
 sentence-transformers
 faiss-cpu
@@ -17,3 +16,5 @@ fastapi
 uvicorn
 
 torch==2.5.1+cpu
+
+google-genai
