@@ -2,8 +2,7 @@
 // FastAPI Backend URL
 // =========================================================
 
-const API_URL =
-    "https://employee-handbook-rag33-4.onrender.com/ask";
+const API_URL ="http://127.0.0.1:8000/ask";
 
 
 // =========================================================
