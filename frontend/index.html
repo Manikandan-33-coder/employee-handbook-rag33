@@ -1,888 +1,391 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>AI Assistant</title>
+    <meta name="description" content="MvM Technologies Employee Handbook AI Assistant">
 
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+    <title>MvM Technologies | Handbook AI</title>
 
-        body {
-            font-family: Arial, Helvetica, sans-serif;
-            background: #f5f7fb;
-            height: 100vh;
-            overflow: hidden;
-        }
-
-        /* Main Application */
-        .app {
-            height: 100vh;
-            display: flex;
-            background: #f5f7fb;
-        }
-
-        /* Sidebar */
-        .sidebar {
-            width: 250px;
-            background: #111827;
-            color: white;
-            padding: 25px 18px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .logo-section {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 35px;
-        }
-
-        .logo {
-            width: 42px;
-            height: 42px;
-            border-radius: 12px;
-            background: linear-gradient(135deg, #7c3aed, #4f46e5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 22px;
-            font-weight: bold;
-        }
-
-        .logo-text h2 {
-            font-size: 17px;
-        }
-
-        .logo-text p {
-            font-size: 11px;
-            color: #9ca3af;
-            margin-top: 3px;
-        }
-
-        .new-chat {
-            width: 100%;
-            padding: 13px;
-            border: 1px solid #374151;
-            border-radius: 10px;
-            background: #1f2937;
-            color: white;
-            cursor: pointer;
-            font-size: 14px;
-            transition: 0.2s;
-        }
-
-        .new-chat:hover {
-            background: #374151;
-        }
-
-        .menu-title {
-            font-size: 11px;
-            color: #6b7280;
-            text-transform: uppercase;
-            margin: 28px 10px 12px;
-            letter-spacing: 1px;
-        }
-
-        .menu-item {
-            padding: 12px 10px;
-            color: #d1d5db;
-            border-radius: 9px;
-            margin-bottom: 5px;
-            cursor: pointer;
-            font-size: 13px;
-        }
-
-        .menu-item:hover {
-            background: #1f2937;
-            color: white;
-        }
-
-        .sidebar-bottom {
-            padding: 12px;
-            border-radius: 10px;
-            background: #1f2937;
-            color: #9ca3af;
-            font-size: 11px;
-            line-height: 1.5;
-        }
-
-        /* Chat Area */
-        .chat-container {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            min-width: 0;
-        }
-
-        /* Header */
-        .header {
-            height: 70px;
-            background: white;
-            border-bottom: 1px solid #e5e7eb;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 28px;
-        }
-
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .header-icon {
-            width: 38px;
-            height: 38px;
-            border-radius: 10px;
-            background: linear-gradient(135deg, #7c3aed, #4f46e5);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-        }
-
-        .header-title h3 {
-            font-size: 15px;
-            color: #111827;
-        }
-
-        .header-title p {
-            font-size: 11px;
-            color: #6b7280;
-            margin-top: 2px;
-        }
-
-        .online {
-            display: flex;
-            align-items: center;
-            gap: 7px;
-            font-size: 11px;
-            color: #16a34a;
-        }
-
-        .online-dot {
-            width: 8px;
-            height: 8px;
-            background: #22c55e;
-            border-radius: 50%;
-        }
-
-        /* Messages */
-        .messages {
-            flex: 1;
-            overflow-y: auto;
-            padding: 35px 40px;
-        }
-
-        .welcome {
-            max-width: 700px;
-            margin: 80px auto 0;
-            text-align: center;
-        }
-
-        .welcome-icon {
-            width: 75px;
-            height: 75px;
-            margin: 0 auto 22px;
-            border-radius: 24px;
-            background: linear-gradient(135deg, #7c3aed, #4f46e5);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 34px;
-            box-shadow: 0 15px 35px rgba(79, 70, 229, 0.25);
-        }
-
-        .welcome h1 {
-            font-size: 38px;
-            color: #111827;
-            margin-bottom: 12px;
-        }
-
-        .welcome h1 span {
-            color: #6d4aff;
-        }
-
-        .welcome p {
-            color: #6b7280;
-            font-size: 14px;
-            line-height: 1.6;
-        }
-
-        /* Chat Messages */
-        .message-row {
-            display: flex;
-            margin-bottom: 22px;
-        }
-
-        .message-row.user {
-            justify-content: flex-end;
-        }
-
-        .message {
-            max-width: 700px;
-            padding: 14px 17px;
-            border-radius: 16px;
-            font-size: 14px;
-            line-height: 1.6;
-        }
-
-        .message.assistant {
-            background: white;
-            color: #1f2937;
-            border: 1px solid #e5e7eb;
-            border-bottom-left-radius: 4px;
-        }
-
-        .message.user {
-            background: #4f46e5;
-            color: white;
-            border-bottom-right-radius: 4px;
-        }
-
-        /* Loading */
-        .loading {
-            display: none;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .loading.show {
-            display: flex;
-        }
-
-        .loading-avatar {
-            width: 34px;
-            height: 34px;
-            border-radius: 10px;
-            background: #ede9fe;
-            color: #6d4aff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .typing {
-            display: flex;
-            gap: 4px;
-            align-items: center;
-            background: white;
-            border: 1px solid #e5e7eb;
-            padding: 12px 15px;
-            border-radius: 15px;
-        }
-
-        .typing span {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: #7c3aed;
-            animation: typing 1.2s infinite;
-        }
-
-        .typing span:nth-child(2) {
-            animation-delay: 0.2s;
-        }
-
-        .typing span:nth-child(3) {
-            animation-delay: 0.4s;
-        }
-
-        @keyframes typing {
-            0%, 60%, 100% {
-                transform: translateY(0);
-                opacity: 0.5;
-            }
-
-            30% {
-                transform: translateY(-5px);
-                opacity: 1;
-            }
-        }
-
-        /* Input */
-        .input-section {
-            background: white;
-            border-top: 1px solid #e5e7eb;
-            padding: 15px 30px 18px;
-        }
-
-        .form {
-            max-width: 900px;
-            margin: auto;
-            display: flex;
-            gap: 10px;
-        }
-
-        .input-box {
-            flex: 1;
-            position: relative;
-        }
-
-        .input-box input {
-            width: 100%;
-            height: 52px;
-            padding: 0 18px;
-            border: 1px solid #d1d5db;
-            border-radius: 14px;
-            outline: none;
-            font-size: 14px;
-            color: #111827;
-            background: #f9fafb;
-        }
-
-        .input-box input:focus {
-            border-color: #6d4aff;
-            background: white;
-            box-shadow: 0 0 0 3px rgba(109, 74, 255, 0.08);
-        }
-
-        .input-box input::placeholder {
-            color: #9ca3af;
-        }
-
-        .send-button {
-            width: 52px;
-            height: 52px;
-            border: none;
-            border-radius: 14px;
-            background: linear-gradient(135deg, #7c3aed, #4f46e5);
-            color: white;
-            cursor: pointer;
-            font-size: 20px;
-            transition: 0.2s;
-        }
-
-        .send-button:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 8px 20px rgba(79, 70, 229, 0.25);
-        }
-
-        .send-button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .footer-text {
-            max-width: 900px;
-            margin: 8px auto 0;
-            font-size: 10px;
-            color: #9ca3af;
-            text-align: center;
-        }
-
-        /* Mobile */
-        @media (max-width: 768px) {
-
-            .sidebar {
-                display: none;
-            }
-
-            .header {
-                padding: 0 15px;
-            }
-
-            .messages {
-                padding: 25px 15px;
-            }
-
-            .welcome {
-                margin-top: 60px;
-            }
-
-            .welcome h1 {
-                font-size: 31px;
-            }
-
-            .welcome p {
-                font-size: 13px;
-            }
-
-            .input-section {
-                padding: 10px;
-            }
-
-            .online {
-                display: none;
-            }
-
-            .message {
-                max-width: 88%;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<div class="app">
-
-    <!-- SIDEBAR -->
-    <aside class="sidebar">
-
-        <div>
-            <div class="logo-section">
-                <div class="logo">✦</div>
-
-                <div class="logo-text">
-                    <h2>AI Assistant</h2>
-                    <p>Employee Handbook</p>
-                </div>
-            </div>
-
-            <button class="new-chat" id="newChat">
-                + New Conversation
-            </button>
-
-            <div class="menu-title">
-                Assistant
-            </div>
-
-            <div class="menu-item">
-                ✦ Handbook Assistant
-            </div>
-
-            <div class="menu-item">
-                ◷ Working Hours
-            </div>
-
-            <div class="menu-item">
-                ◫ Leave Policy
-            </div>
-
-            <div class="menu-item">
-                ▣ Security
-            </div>
-        </div>
-
-        <div class="sidebar-bottom">
-            <strong>AI Handbook Assistant</strong><br>
-            Answers are generated using your Employee Handbook knowledge base.
-        </div>
-
-    </aside>
+    <!-- Background -->
+    <div class="background-glow glow-one"></div>
+    <div class="background-glow glow-two"></div>
 
 
-    <!-- CHAT -->
-    <section class="chat-container">
+    <!-- =====================================================
+         Desktop Showcase
+    ====================================================== -->
 
-        <!-- HEADER -->
-        <header class="header">
+    <main class="page">
 
-            <div class="header-left">
+        <!-- =================================================
+             Mobile App Frame
+        ================================================== -->
 
-                <div class="header-icon">
-                    ✦
-                </div>
+        <section class="phone-frame">
 
-                <div class="header-title">
-                    <h3>AI Assistant</h3>
-                    <p>Employee Handbook • RAG Assistant</p>
-                </div>
+            <!-- =============================================
+                 Header
+            ============================================== -->
 
-            </div>
+            <header class="app-header">
 
-            <div class="online">
-                <span class="online-dot"></span>
-                Online
-            </div>
+                <div class="header-left">
 
-        </header>
+                    <div class="company-logo">
+                        M
+                    </div>
 
+                    <div class="company-info">
 
-        <!-- MESSAGES -->
-        <main class="messages" id="messages">
+                        <h1>
+                            MvM Technologies
+                        </h1>
 
-            <!-- Initial Greeting -->
-            <div class="welcome" id="welcome">
+                        <span>
+                            Employee Handbook
+                        </span>
 
-                <div class="welcome-icon">
-                    ✦
-                </div>
-
-                <h1>
-                    Hi! <span>How can I help you?</span>
-                </h1>
-
-                <p>
-                    Ask me anything about the Employee Handbook,
-                    company policies, rules, leave, working hours,
-                    security, or other employee guidelines.
-                </p>
-
-            </div>
-
-
-            <!-- Loading -->
-            <div class="loading" id="loading">
-
-                <div class="loading-avatar">
-                    ✦
-                </div>
-
-                <div class="typing">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </div>
-
-            </div>
-
-        </main>
-
-
-        <!-- INPUT -->
-        <footer class="input-section">
-
-            <form class="form" id="questionForm">
-
-                <div class="input-box">
-
-                    <input
-                        type="text"
-                        id="questionInput"
-                        placeholder="Ask me anything..."
-                        autocomplete="off"
-                        required
-                    >
+                    </div>
 
                 </div>
 
-                <button
-                    type="submit"
-                    class="send-button"
-                    id="askButton"
-                >
-                    ➤
-                </button>
 
-            </form>
+                <div class="header-right">
 
-            <div class="footer-text">
-                AI Assistant • Powered by Employee Handbook RAG
+                    <div class="online-status">
+                        <span class="online-dot"></span>
+                        Online
+                    </div>
+
+                    <button type="button" id="clearChat" class="icon-button" title="Clear conversation">
+                        ↻
+                    </button>
+
+                </div>
+
+            </header>
+
+
+            <!-- =============================================
+                 Chat Area
+            ============================================== -->
+
+            <div class="chat-area">
+
+                <!-- Welcome -->
+                <section class="welcome">
+
+                    <div class="ai-orb">
+
+                        <div class="orb-inner">
+                            ✦
+                        </div>
+
+                    </div>
+
+
+                    <span class="ai-label">
+                        AI HANDBOOK ASSISTANT
+                    </span>
+
+
+                    <h2>
+                        How can I
+                        <span>help you?</span>
+                    </h2>
+
+
+                    <p>
+                        Ask anything about MvM Technologies
+                        policies and employee guidelines.
+                    </p>
+
+                </section>
+
+
+                <!-- =========================================
+                     Suggested Questions
+                ========================================== -->
+
+                <section class="quick-actions">
+
+                    <button type="button" class="quick-card" data-question="What are the working hours?">
+
+                        <div class="quick-icon">
+                            ⏱
+                        </div>
+
+                        <div class="quick-content">
+
+                            <strong>
+                                Working Hours
+                            </strong>
+
+                            <small>
+                                Timings & attendance
+                            </small>
+
+                        </div>
+
+                        <span class="quick-arrow">
+                            →
+                        </span>
+
+                    </button>
+
+
+                    <button type="button" class="quick-card" data-question="How many casual leave days are available?">
+
+                        <div class="quick-icon">
+                            ◴
+                        </div>
+
+                        <div class="quick-content">
+
+                            <strong>
+                                Leave Policy
+                            </strong>
+
+                            <small>
+                                Leave & eligibility
+                            </small>
+
+                        </div>
+
+                        <span class="quick-arrow">
+                            →
+                        </span>
+
+                    </button>
+
+
+                    <button type="button" class="quick-card" data-question="What is the notice period?">
+
+                        <div class="quick-icon">
+                            ◫
+                        </div>
+
+                        <div class="quick-content">
+
+                            <strong>
+                                Resignation
+                            </strong>
+
+                            <small>
+                                Notice & exit process
+                            </small>
+
+                        </div>
+
+                        <span class="quick-arrow">
+                            →
+                        </span>
+
+                    </button>
+
+
+                    <button type="button" class="quick-card" data-question="Can I share my password with a colleague?">
+
+                        <div class="quick-icon">
+                            ◈
+                        </div>
+
+                        <div class="quick-content">
+
+                            <strong>
+                                Security
+                            </strong>
+
+                            <small>
+                                Password & data safety
+                            </small>
+
+                        </div>
+
+                        <span class="quick-arrow">
+                            →
+                        </span>
+
+                    </button>
+
+                </section>
+
+
+                <!-- =========================================
+                     Messages
+                ========================================== -->
+
+                <section id="chatMessages" class="chat-messages" aria-live="polite">
+                    <!-- JavaScript messages -->
+                </section>
+
+
+                <!-- =========================================
+                     Loading
+                ========================================== -->
+
+                <div id="loading" class="loading hidden">
+
+                    <div class="message-avatar">
+                        ✦
+                    </div>
+
+                    <div class="loading-bubble">
+
+                        <div class="loading-dots">
+
+                            <span></span>
+                            <span></span>
+                            <span></span>
+
+                        </div>
+
+                        <span>
+                            Searching handbook...
+                        </span>
+
+                    </div>
+
+                </div>
+
             </div>
 
-        </footer>
 
-    </section>
+            <!-- =============================================
+                 Input Area
+            ============================================== -->
 
-</div>
+            <footer class="input-area">
 
+                <form id="questionForm" class="question-form">
 
-<script>
+                    <div class="input-wrapper">
 
-    /*
-    ============================================================
-    BACKEND URL
-    ============================================================
-    */
+                        <span class="input-symbol">
+                            ✦
+                        </span>
 
-    const API_URL =
-        "https://employee-handbook-rag33-4.onrender.com/ask";
+                        <input type="text" id="questionInput" placeholder="Ask the handbook..." autocomplete="off"
+                            required>
 
+                    </div>
 
-    /*
-    ============================================================
-    HTML ELEMENTS
-    ============================================================
-    */
 
-    const form =
-        document.getElementById("questionForm");
+                    <button type="submit" id="askButton" class="send-button">
 
-    const input =
-        document.getElementById("questionInput");
+                        <span>
+                            →
+                        </span>
 
-    const button =
-        document.getElementById("askButton");
+                    </button>
 
-    const messages =
-        document.getElementById("messages");
+                </form>
 
-    const loading =
-        document.getElementById("loading");
 
-    const welcome =
-        document.getElementById("welcome");
+                <div class="input-hint">
 
-    const newChat =
-        document.getElementById("newChat");
+                    <span>
+                        Answers are based on the Employee Handbook
+                    </span>
 
+                    <span class="secure-mark">
+                        ◇
+                    </span>
 
-    /*
-    ============================================================
-    ADD MESSAGE
-    ============================================================
-    */
+                    <span>
+                        RAG
+                    </span>
 
-    function addMessage(text, type) {
+                </div>
 
-        const row = document.createElement("div");
+            </footer>
 
-        row.className =
-            "message-row " + type;
 
+            <!-- =============================================
+                 Bottom Navigation
+            ============================================== -->
 
-        const message =
-            document.createElement("div");
+            <nav class="bottom-nav">
 
-        message.className =
-            "message " + type;
+                <div class="nav-item active">
 
+                    <span class="nav-icon">
+                        ✦
+                    </span>
 
-        message.textContent = text;
+                    <span>
+                        Assistant
+                    </span>
 
+                </div>
 
-        row.appendChild(message);
 
-        messages.insertBefore(
-            row,
-            loading
-        );
+                <div class="nav-divider"></div>
 
-        scrollToBottom();
-    }
 
+                <div class="nav-item">
 
-    /*
-    ============================================================
-    SCROLL
-    ============================================================
-    */
+                    <span class="nav-icon">
+                        ◫
+                    </span>
 
-    function scrollToBottom() {
+                    <span>
+                        Handbook
+                    </span>
 
-        messages.scrollTop =
-            messages.scrollHeight;
-    }
+                </div>
 
+            </nav>
 
-    /*
-    ============================================================
-    ASK BACKEND
-    ============================================================
-    */
+        </section>
 
-    async function askAssistant(question) {
 
-        const response =
-            await fetch(API_URL, {
+        <!-- =================================================
+             Desktop Information
+        ================================================== -->
 
-                method: "POST",
+        <aside class="showcase-info">
 
-                headers: {
-                    "Content-Type":
-                        "application/json"
-                },
+            <span class="showcase-badge">
+                AI • RAG • KNOWLEDGE ASSISTANT
+            </span>
 
-                body: JSON.stringify({
-                    question: question
-                })
+            <h3>
+                Employee Handbook
+                <span>Intelligence.</span>
+            </h3>
 
-            });
+            <p>
+                A conversational AI assistant that retrieves
+                relevant information from the MvM Technologies
+                Employee Handbook and provides grounded answers.
+            </p>
 
+            <div class="technology-list">
 
-        if (!response.ok) {
+                <span>LangChain</span>
+                <span>FAISS</span>
+                <span>Embeddings</span>
+                <span>Ollama</span>
 
-            throw new Error(
-                "Server returned " +
-                response.status
-            );
+            </div>
 
-        }
+        </aside>
 
+    </main>
 
-        const data =
-            await response.json();
 
-
-        /*
-        Handle common FastAPI response formats.
-        */
-
-        return (
-            data.answer ||
-            data.response ||
-            data.result ||
-            data.message ||
-            data.output ||
-            JSON.stringify(data)
-        );
-
-    }
-
-
-    /*
-    ============================================================
-    FORM SUBMIT
-    ============================================================
-    */
-
-    form.addEventListener(
-        "submit",
-        async function(event) {
-
-            event.preventDefault();
-
-
-            const question =
-                input.value.trim();
-
-
-            if (!question) {
-                return;
-            }
-
-
-            /*
-            Remove welcome message
-            */
-
-            welcome.style.display =
-                "none";
-
-
-            /*
-            Show user message
-            */
-
-            addMessage(
-                question,
-                "user"
-            );
-
-
-            /*
-            Clear input
-            */
-
-            input.value = "";
-
-
-            /*
-            Disable button
-            */
-
-            button.disabled =
-                true;
-
-
-            /*
-            Show loading
-            */
-
-            loading.classList.add(
-                "show"
-            );
-
-            scrollToBottom();
-
-
-            try {
-
-                const answer =
-                    await askAssistant(question);
-
-
-                loading.classList.remove(
-                    "show"
-                );
-
-
-                addMessage(
-                    answer,
-                    "assistant"
-                );
-
-            }
-
-            catch (error) {
-
-                console.error(error);
-
-
-                loading.classList.remove(
-                    "show"
-                );
-
-
-                addMessage(
-                    "Sorry, I couldn't connect to the AI Assistant right now. Please try again.",
-                    "assistant"
-                );
-
-            }
-
-
-            /*
-            Enable button
-            */
-
-            button.disabled =
-                false;
-
-
-            input.focus();
-
-        }
-    );
-
-
-    /*
-    ============================================================
-    NEW CHAT
-    ============================================================
-    */
-
-    newChat.addEventListener(
-        "click",
-        function() {
-
-            const chatMessages =
-                messages.querySelectorAll(
-                    ".message-row"
-                );
-
-
-            chatMessages.forEach(
-                message => message.remove()
-            );
-
-
-            welcome.style.display =
-                "block";
-
-
-            input.value = "";
-
-            input.focus();
-
-        }
-    );
-
-
-    /*
-    ============================================================
-    ENTER FOCUS
-    ============================================================
-    */
-
-    input.focus();
-
-</script>
+    <script src="script.js"></script>
 
 </body>
+
 </html>
