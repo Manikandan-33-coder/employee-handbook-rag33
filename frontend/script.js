@@ -1,12 +1,10 @@
+```javascript
 // =========================================================
 // FastAPI Backend URL
 // =========================================================
 
-// Local development
-const API_URL = "http://127.0.0.1:8000/ask";
-
-// After Render deployment, change to:
-// const API_URL = "https://your-backend.onrender.com/ask";
+// Deployed Render backend
+const API_URL = "https://employee-handbook-rag33-4.onrender.com/ask";
 
 
 // =========================================================
@@ -38,7 +36,6 @@ function addMessage(message, sender) {
         sender
     );
 
-
     const messageContent = document.createElement("div");
 
     messageContent.classList.add(
@@ -47,7 +44,6 @@ function addMessage(message, sender) {
 
     messageContent.textContent = message;
 
-
     messageWrapper.appendChild(
         messageContent
     );
@@ -55,7 +51,6 @@ function addMessage(message, sender) {
     chatMessages.appendChild(
         messageWrapper
     );
-
 
     // Scroll to latest message
     chatMessages.scrollTop =
@@ -74,7 +69,6 @@ function showLoading() {
     askButton.disabled = true;
     questionInput.disabled = true;
 
-
     quickCards.forEach(card => {
         card.disabled = true;
     });
@@ -91,7 +85,6 @@ function hideLoading() {
 
     askButton.disabled = false;
     questionInput.disabled = false;
-
 
     quickCards.forEach(card => {
         card.disabled = false;
@@ -115,10 +108,8 @@ async function askQuestion(question) {
             "user"
         );
 
-
         // Show loading
         showLoading();
-
 
         // Send request to FastAPI
         const response = await fetch(
@@ -136,7 +127,6 @@ async function askQuestion(question) {
             }
         );
 
-
         // Check server response
         if (!response.ok) {
 
@@ -151,18 +141,15 @@ async function askQuestion(question) {
             );
         }
 
-
         // Convert response to JSON
         const data =
             await response.json();
-
 
         // Show AI answer
         addMessage(
             data.answer,
             "assistant"
         );
-
 
     } catch (error) {
 
@@ -171,17 +158,14 @@ async function askQuestion(question) {
             error
         );
 
-
         addMessage(
             `Sorry, something went wrong: ${error.message}`,
             "assistant"
         );
 
-
     } finally {
 
         hideLoading();
-
     }
 }
 
@@ -196,26 +180,19 @@ questionForm.addEventListener(
 
         event.preventDefault();
 
-
         const question =
             questionInput.value.trim();
-
 
         // Ignore empty input
         if (!question) {
             return;
         }
 
-
         // Clear input
         questionInput.value = "";
 
-
         // Ask question
-        await askQuestion(
-            question
-        );
-
+        await askQuestion(question);
     }
 );
 
@@ -234,19 +211,15 @@ quickCards.forEach(
                 const question =
                     card.dataset.question;
 
-
                 if (!question) {
                     return;
                 }
 
-
                 await askQuestion(
                     question
                 );
-
             }
         );
-
     }
 );
 
@@ -266,8 +239,7 @@ if (clearChatButton) {
             questionInput.value = "";
 
             questionInput.focus();
-
         }
     );
-
 }
+```
