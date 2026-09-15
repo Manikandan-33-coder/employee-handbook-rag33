@@ -43,11 +43,6 @@ body {
     overflow-x: hidden;
 }
 
-
-/* =========================================================
-   BUTTON / INPUT
-========================================================= */
-
 button,
 input {
     font-family: inherit;
@@ -65,8 +60,8 @@ button {
 .background-glow {
     position: fixed;
 
-    width: 320px;
-    height: 320px;
+    width: 300px;
+    height: 300px;
 
     border-radius: 50%;
 
@@ -113,14 +108,12 @@ button {
 
     justify-content: center;
 
-    padding: 25px;
-
+    padding: 20px;
 }
 
 
 /* =========================================================
    PHONE FRAME
-   SMALLER DESKTOP PHONE
 ========================================================= */
 
 .phone-frame {
@@ -128,9 +121,8 @@ button {
 
     z-index: 10;
 
-    width: 380px;
-
-    height: 760px;
+    width: 360px;
+    height: 700px;
 
     display: flex;
 
@@ -164,7 +156,7 @@ button {
 
     left: 50%;
 
-    width: 68px;
+    width: 65px;
 
     height: 4px;
 
@@ -191,7 +183,7 @@ button {
 
     z-index: 20;
 
-    min-height: 82px;
+    min-height: 78px;
 
     display: flex;
 
@@ -199,10 +191,11 @@ button {
 
     justify-content: space-between;
 
-    padding: 22px 17px 14px;
+    padding:
+        21px 16px 13px;
 
     background:
-        rgba(255, 255, 255, 0.97);
+        rgba(255, 255, 255, 0.98);
 
     border-bottom:
         1px solid #e4e8ef;
@@ -214,7 +207,9 @@ button {
 }
 
 
-/* LEFT */
+/* =========================================================
+   HEADER LEFT
+========================================================= */
 
 .header-left {
 
@@ -222,7 +217,7 @@ button {
 
     align-items: center;
 
-    gap: 11px;
+    gap: 10px;
 
     min-width: 0;
 }
@@ -230,9 +225,8 @@ button {
 
 .company-logo {
 
-    width: 39px;
-
-    height: 39px;
+    width: 37px;
+    height: 37px;
 
     flex-shrink: 0;
 
@@ -253,7 +247,7 @@ button {
 
     color: #ffffff;
 
-    font-size: 17px;
+    font-size: 16px;
 
     font-weight: 800;
 
@@ -297,13 +291,15 @@ button {
 
     color: #7f8999;
 
-    font-size: 10px;
+    font-size: 9px;
 
     line-height: 1.3;
 }
 
 
-/* RIGHT */
+/* =========================================================
+   HEADER RIGHT
+========================================================= */
 
 .header-right {
 
@@ -350,13 +346,17 @@ button {
 
 .online-dot {
 
-    width: 6px;
+    width:
+        6px;
 
-    height: 6px;
+    height:
+        6px;
 
-    border-radius: 50%;
+    border-radius:
+        50%;
 
-    background: #20b577;
+    background:
+        #20b577;
 
     box-shadow:
         0 0 0 3px
@@ -366,15 +366,20 @@ button {
 
 .icon-button {
 
-    width: 31px;
+    width:
+        30px;
 
-    height: 31px;
+    height:
+        30px;
 
-    display: flex;
+    display:
+        flex;
 
-    align-items: center;
+    align-items:
+        center;
 
-    justify-content: center;
+    justify-content:
+        center;
 
     border:
         1px solid #dfe4eb;
@@ -420,20 +425,26 @@ button {
 
 .chat-area {
 
-    position: relative;
+    position:
+        relative;
 
-    z-index: 5;
+    z-index:
+        5;
 
-    flex: 1;
+    flex:
+        1;
 
-    min-height: 0;
+    min-height:
+        0;
 
-    overflow-y: auto;
+    overflow-y:
+        auto;
 
     padding:
-        25px 17px 18px;
+        28px 16px 18px;
 
-    scrollbar-width: thin;
+    scrollbar-width:
+        thin;
 
     scrollbar-color:
         #c6ced9 transparent;
@@ -442,7 +453,8 @@ button {
 
 .chat-area::-webkit-scrollbar {
 
-    width: 5px;
+    width:
+        5px;
 }
 
 
@@ -462,30 +474,43 @@ button {
 
 .welcome {
 
-    position: relative;
+    position:
+        relative;
 
-    z-index: 6;
+    z-index:
+        6;
 
-    max-width: 330px;
+    width:
+        100%;
+
+    max-width:
+        320px;
 
     margin:
-        16px auto 30px;
+        48px auto 30px;
 
     text-align:
         center;
 }
 
 
+/* =========================================================
+   AI ORB
+========================================================= */
+
 .ai-orb {
 
-    width: 76px;
+    width:
+        68px;
 
-    height: 76px;
+    height:
+        68px;
 
     margin:
-        0 auto 15px;
+        0 auto 21px;
 
-    display: flex;
+    display:
+        flex;
 
     align-items:
         center;
@@ -494,7 +519,7 @@ button {
         center;
 
     border-radius:
-        23px;
+        22px;
 
     background:
         linear-gradient(
@@ -512,7 +537,8 @@ button {
 
     animation:
         floatOrb 4s
-        ease-in-out infinite;
+        ease-in-out
+        infinite;
 
     pointer-events:
         none;
@@ -522,10 +548,10 @@ button {
 .orb-inner {
 
     width:
-        50px;
+        46px;
 
     height:
-        50px;
+        46px;
 
     display:
         flex;
@@ -537,7 +563,7 @@ button {
         center;
 
     border-radius:
-        15px;
+        14px;
 
     background:
         linear-gradient(
@@ -550,7 +576,7 @@ button {
         #ffffff;
 
     font-size:
-        26px;
+        24px;
 
     box-shadow:
         0 9px 19px
@@ -565,47 +591,22 @@ button {
 
     0%,
     100% {
+
         transform:
             translateY(0);
     }
 
     50% {
+
         transform:
             translateY(-5px);
     }
 }
 
 
-.ai-label {
-
-    display:
-        inline-block;
-
-    margin-bottom:
-        9px;
-
-    padding:
-        5px 9px;
-
-    border-radius:
-        999px;
-
-    background:
-        #eef0ff;
-
-    color:
-        #555bdc;
-
-    font-size:
-        8px;
-
-    font-weight:
-        800;
-
-    letter-spacing:
-        0.12em;
-}
-
+/* =========================================================
+   WELCOME TITLE
+========================================================= */
 
 .welcome h2 {
 
@@ -619,52 +620,10 @@ button {
         800;
 
     line-height:
-        1.08;
+        1.15;
 
     letter-spacing:
         -0.045em;
-}
-
-
-.welcome h2 span {
-
-    display:
-        inline;
-
-    margin-left:
-        3px;
-
-    background:
-        linear-gradient(
-            90deg,
-            #5257df,
-            #7b39e7
-        );
-
-    background-clip:
-        text;
-
-    -webkit-background-clip:
-        text;
-
-    color:
-        transparent;
-}
-
-
-.welcome p {
-
-    margin-top:
-        11px;
-
-    color:
-        #7f8998;
-
-    font-size:
-        11px;
-
-    line-height:
-        1.65;
 }
 
 
@@ -680,6 +639,9 @@ button {
     z-index:
         10;
 
+    width:
+        100%;
+
     display:
         flex;
 
@@ -688,19 +650,16 @@ button {
 
     gap:
         12px;
-
-    width:
-        100%;
 }
 
 
 .message {
 
-    display:
-        flex;
-
     width:
         100%;
+
+    display:
+        flex;
 
     animation:
         messageAppear
@@ -769,10 +728,11 @@ button {
 }
 
 
-/* USER */
+/* =========================================================
+   USER MESSAGE
+========================================================= */
 
-.message.user
-.message-content {
+.message.user .message-content {
 
     color:
         #ffffff;
@@ -793,10 +753,11 @@ button {
 }
 
 
-/* AI */
+/* =========================================================
+   ASSISTANT MESSAGE
+========================================================= */
 
-.message.assistant
-.message-content {
+.message.assistant .message-content {
 
     color:
         #374151;
@@ -842,7 +803,7 @@ button {
 }
 
 
-.message-avatar {
+.loading-avatar {
 
     width:
         28px;
@@ -933,8 +894,7 @@ button {
 
     animation:
         loadingDot
-        1.2s
-        infinite;
+        1.2s infinite;
 }
 
 
@@ -948,7 +908,7 @@ button {
 .loading-dots span:nth-child(3) {
 
     animation-delay:
-        0.3s;
+        0.30s;
 }
 
 
@@ -977,6 +937,7 @@ button {
 
 
 .hidden {
+
     display:
         none !important;
 }
@@ -998,7 +959,7 @@ button {
         0;
 
     padding:
-        11px 13px 9px;
+        10px 12px 8px;
 
     border-top:
         1px solid #e2e6ed;
@@ -1060,13 +1021,14 @@ button {
 }
 
 
+/* =========================================================
+   INPUT WRAPPER
+========================================================= */
+
 .input-wrapper {
 
     position:
         relative;
-
-    z-index:
-        102;
 
     flex:
         1;
@@ -1084,6 +1046,10 @@ button {
         7px;
 }
 
+
+/* =========================================================
+   INPUT ICON
+========================================================= */
 
 .input-symbol {
 
@@ -1119,13 +1085,11 @@ button {
 }
 
 
+/* =========================================================
+   INPUT
+========================================================= */
+
 .question-form input {
-
-    position:
-        relative;
-
-    z-index:
-        103;
 
     width:
         100%;
@@ -1140,10 +1104,10 @@ button {
         0 5px;
 
     border:
-        0;
+        none;
 
     outline:
-        0;
+        none;
 
     background:
         transparent;
@@ -1156,6 +1120,15 @@ button {
 
     line-height:
         39px;
+
+    cursor:
+        text;
+
+    user-select:
+        text;
+
+    -webkit-user-select:
+        text;
 }
 
 
@@ -1164,16 +1137,19 @@ button {
     color:
         #929cab;
 
+    opacity:
+        1;
 }
 
+
+/* =========================================================
+   SEND BUTTON
+========================================================= */
 
 .send-button {
 
     position:
         relative;
-
-    z-index:
-        104;
 
     width:
         39px;
@@ -1239,6 +1215,13 @@ button {
 }
 
 
+.send-button:active {
+
+    transform:
+        translateY(0);
+}
+
+
 .send-button:disabled {
 
     opacity:
@@ -1251,6 +1234,10 @@ button {
         none;
 }
 
+
+/* =========================================================
+   INPUT HINT
+========================================================= */
 
 .input-hint {
 
@@ -1274,6 +1261,9 @@ button {
 
     font-size:
         7px;
+
+    pointer-events:
+        none;
 }
 
 
@@ -1285,7 +1275,7 @@ button {
 
 
 /* =========================================================
-   BOTTOM NAV
+   BOTTOM NAVIGATION
 ========================================================= */
 
 .bottom-nav {
@@ -1297,7 +1287,7 @@ button {
         30;
 
     height:
-        49px;
+        46px;
 
     flex-shrink:
         0;
@@ -1312,7 +1302,7 @@ button {
         center;
 
     gap:
-        19px;
+        18px;
 
     border-top:
         1px solid #e5e8ed;
@@ -1338,6 +1328,9 @@ button {
 
     font-size:
         9px;
+
+    pointer-events:
+        none;
 }
 
 
@@ -1372,7 +1365,7 @@ button {
 
 
 /* =========================================================
-   REMOVE DESKTOP SHOWCASE
+   REMOVE RIGHT-SIDE CONTENT
 ========================================================= */
 
 .showcase-info {
@@ -1394,7 +1387,17 @@ button {
             100vh;
 
         padding:
-            20px;
+            15px;
+    }
+
+
+    .phone-frame {
+
+        width:
+            360px;
+
+        height:
+            700px;
     }
 
 }
@@ -1473,22 +1476,22 @@ button {
     .app-header {
 
         min-height:
-            72px;
+            70px;
 
         padding:
             16px
-            13px
-            12px;
+            12px
+            11px;
     }
 
 
     .company-logo {
 
         width:
-            36px;
+            35px;
 
         height:
-            36px;
+            35px;
 
         border-radius:
             10px;
@@ -1525,18 +1528,18 @@ button {
     .icon-button {
 
         width:
-            29px;
+            28px;
 
         height:
-            29px;
+            28px;
     }
 
 
     .chat-area {
 
         padding:
-            20px
-            12px
+            22px
+            11px
             14px;
     }
 
@@ -1544,59 +1547,59 @@ button {
     .welcome {
 
         margin:
-            8px
+            35px
             auto
-            22px;
+            20px;
     }
 
 
     .ai-orb {
 
         width:
-            66px;
+            62px;
 
         height:
-            66px;
+            62px;
 
         border-radius:
-            20px;
+            19px;
     }
 
 
     .orb-inner {
 
         width:
-            43px;
+            41px;
 
         height:
-            43px;
+            41px;
 
         border-radius:
-            13px;
+            12px;
 
         font-size:
-            21px;
+            20px;
     }
 
 
     .welcome h2 {
 
         font-size:
-            26px;
+            25px;
     }
 
 
-    .welcome p {
+    .question-form input {
 
         font-size:
-            10px;
+            12px;
     }
 
 
     .bottom-nav {
 
         height:
-            47px;
+            45px;
     }
 
 }
@@ -1608,13 +1611,6 @@ button {
 
 @media (max-width: 430px) {
 
-    .app-header {
-
-        padding:
-            15px 11px 11px;
-    }
-
-
     .online-status {
 
         display:
@@ -1625,31 +1621,31 @@ button {
     .chat-area {
 
         padding-left:
-            10px;
+            9px;
 
         padding-right:
-            10px;
+            9px;
+    }
+
+
+    .welcome {
+
+        margin-top:
+            30px;
     }
 
 
     .welcome h2 {
 
         font-size:
-            25px;
-    }
-
-
-    .welcome p {
-
-        font-size:
-            10px;
+            24px;
     }
 
 
     .message-content {
 
         max-width:
-            92%;
+            93%;
 
         font-size:
             12px;
@@ -1659,10 +1655,10 @@ button {
     .input-area {
 
         padding-left:
-            8px;
+            7px;
 
         padding-right:
-            8px;
+            7px;
     }
 
 
@@ -1690,6 +1686,13 @@ button {
 
         font-size:
             17px;
+    }
+
+
+    .input-hint {
+
+        font-size:
+            7px;
     }
 
 }
