@@ -2,52 +2,79 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-    <meta name="description" content="MvM Technologies Employee Handbook AI Assistant">
+    <meta
+        name="description"
+        content="AI Assistant"
+    >
 
-    <title>MvM Technologies | Handbook AI</title>
+    <title>AI Assistant</title>
 
-    <link rel="stylesheet" href="style.css">
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
 </head>
+
 
 <body>
 
-    <!-- Background -->
+
+    <!-- =====================================================
+         BACKGROUND
+    ====================================================== -->
+
     <div class="background-glow glow-one"></div>
+
     <div class="background-glow glow-two"></div>
 
 
+
     <!-- =====================================================
-         Desktop Showcase
+         MAIN PAGE
     ====================================================== -->
 
     <main class="page">
 
+
         <!-- =================================================
-             Mobile App Frame
+             PHONE FRAME
         ================================================== -->
 
         <section class="phone-frame">
 
-            <!-- =============================================
-                 Header
-            ============================================== -->
+
+            <!-- =================================================
+                 HEADER
+            ================================================== -->
 
             <header class="app-header">
 
+
                 <div class="header-left">
 
+
+                    <!-- AI LOGO -->
+
                     <div class="company-logo">
-                        M
+                        ✦
                     </div>
+
+
+                    <!-- AI NAME -->
 
                     <div class="company-info">
 
                         <h1>
-                            MvM Technologies
+                            AI Assistant
                         </h1>
 
                         <span>
@@ -56,231 +83,203 @@
 
                     </div>
 
+
                 </div>
 
+
+
+                <!-- HEADER RIGHT -->
 
                 <div class="header-right">
 
+
+                    <!-- ONLINE -->
+
                     <div class="online-status">
+
                         <span class="online-dot"></span>
+
                         Online
+
                     </div>
 
-                    <button type="button" id="clearChat" class="icon-button" title="Clear conversation">
+
+                    <!-- CLEAR CHAT -->
+
+                    <button
+                        type="button"
+                        id="clearChat"
+                        class="icon-button"
+                        title="New conversation"
+                        aria-label="New conversation"
+                    >
+
                         ↻
+
                     </button>
 
+
                 </div>
+
 
             </header>
 
 
-            <!-- =============================================
-                 Chat Area
-            ============================================== -->
 
-            <div class="chat-area">
+            <!-- =================================================
+                 CHAT AREA
+            ================================================== -->
 
-                <!-- Welcome -->
-                <section class="welcome">
+            <div class="chat-area"
+                 id="chatArea">
+
+
+                <!-- =================================================
+                     WELCOME
+                ================================================== -->
+
+                <section
+                    class="welcome"
+                    id="welcome"
+                >
+
+
+                    <!-- AI ICON -->
 
                     <div class="ai-orb">
 
+
                         <div class="orb-inner">
+
                             ✦
+
                         </div>
+
 
                     </div>
 
 
-                    <span class="ai-label">
-                        AI HANDBOOK ASSISTANT
-                    </span>
-
+                    <!-- ONLY WELCOME TEXT -->
 
                     <h2>
-                        How can I
-                        <span>help you?</span>
+
+                        How can I help you?
+
                     </h2>
 
 
-                    <p>
-                        Ask anything about MvM Technologies
-                        policies and employee guidelines.
-                    </p>
+                </section>
+
+
+
+                <!-- =================================================
+                     CHAT MESSAGES
+                ================================================== -->
+
+                <section
+                    id="chatMessages"
+                    class="chat-messages"
+                    aria-live="polite"
+                >
+
+                    <!-- JavaScript messages appear here -->
 
                 </section>
 
 
-                <!-- =========================================
-                     Suggested Questions
-                ========================================== -->
 
-                <section class="quick-actions">
+                <!-- =================================================
+                     LOADING
+                ================================================== -->
 
-                    <button type="button" class="quick-card" data-question="What are the working hours?">
+                <div
+                    id="loading"
+                    class="loading hidden"
+                >
 
-                        <div class="quick-icon">
-                            ⏱
-                        </div>
-
-                        <div class="quick-content">
-
-                            <strong>
-                                Working Hours
-                            </strong>
-
-                            <small>
-                                Timings & attendance
-                            </small>
-
-                        </div>
-
-                        <span class="quick-arrow">
-                            →
-                        </span>
-
-                    </button>
-
-
-                    <button type="button" class="quick-card" data-question="How many casual leave days are available?">
-
-                        <div class="quick-icon">
-                            ◴
-                        </div>
-
-                        <div class="quick-content">
-
-                            <strong>
-                                Leave Policy
-                            </strong>
-
-                            <small>
-                                Leave & eligibility
-                            </small>
-
-                        </div>
-
-                        <span class="quick-arrow">
-                            →
-                        </span>
-
-                    </button>
-
-
-                    <button type="button" class="quick-card" data-question="What is the notice period?">
-
-                        <div class="quick-icon">
-                            ◫
-                        </div>
-
-                        <div class="quick-content">
-
-                            <strong>
-                                Resignation
-                            </strong>
-
-                            <small>
-                                Notice & exit process
-                            </small>
-
-                        </div>
-
-                        <span class="quick-arrow">
-                            →
-                        </span>
-
-                    </button>
-
-
-                    <button type="button" class="quick-card" data-question="Can I share my password with a colleague?">
-
-                        <div class="quick-icon">
-                            ◈
-                        </div>
-
-                        <div class="quick-content">
-
-                            <strong>
-                                Security
-                            </strong>
-
-                            <small>
-                                Password & data safety
-                            </small>
-
-                        </div>
-
-                        <span class="quick-arrow">
-                            →
-                        </span>
-
-                    </button>
-
-                </section>
-
-
-                <!-- =========================================
-                     Messages
-                ========================================== -->
-
-                <section id="chatMessages" class="chat-messages" aria-live="polite">
-                    <!-- JavaScript messages -->
-                </section>
-
-
-                <!-- =========================================
-                     Loading
-                ========================================== -->
-
-                <div id="loading" class="loading hidden">
 
                     <div class="message-avatar">
+
                         ✦
+
                     </div>
 
+
                     <div class="loading-bubble">
+
 
                         <div class="loading-dots">
 
                             <span></span>
+
                             <span></span>
+
                             <span></span>
 
                         </div>
 
+
                         <span>
+
                             Searching handbook...
+
                         </span>
+
 
                     </div>
 
+
                 </div>
+
 
             </div>
 
 
-            <!-- =============================================
-                 Input Area
-            ============================================== -->
+
+            <!-- =================================================
+                 INPUT AREA
+            ================================================== -->
 
             <footer class="input-area">
 
-                <form id="questionForm" class="question-form">
+
+                <form
+                    id="questionForm"
+                    class="question-form"
+                >
+
 
                     <div class="input-wrapper">
 
+
                         <span class="input-symbol">
+
                             ✦
+
                         </span>
 
-                        <input type="text" id="questionInput" placeholder="Ask the handbook..." autocomplete="off"
-                            required>
+
+                        <input
+                            type="text"
+                            id="questionInput"
+                            placeholder="Ask the handbook..."
+                            autocomplete="off"
+                            required
+                        >
+
 
                     </div>
 
 
-                    <button type="submit" id="askButton" class="send-button">
+
+                    <!-- SEND BUTTON -->
+
+                    <button
+                        type="submit"
+                        id="askButton"
+                        class="send-button"
+                        aria-label="Send question"
+                    >
 
                         <span>
                             →
@@ -288,13 +287,17 @@
 
                     </button>
 
+
                 </form>
 
+
+
+                <!-- INPUT INFORMATION -->
 
                 <div class="input-hint">
 
                     <span>
-                        Answers are based on the Employee Handbook
+                        Employee Handbook
                     </span>
 
                     <span class="secure-mark">
@@ -307,14 +310,17 @@
 
                 </div>
 
+
             </footer>
 
 
-            <!-- =============================================
-                 Bottom Navigation
-            ============================================== -->
+
+            <!-- =================================================
+                 BOTTOM NAVIGATION
+            ================================================== -->
 
             <nav class="bottom-nav">
+
 
                 <div class="nav-item active">
 
@@ -344,47 +350,23 @@
 
                 </div>
 
+
             </nav>
+
 
         </section>
 
 
-        <!-- =================================================
-             Desktop Information
-        ================================================== -->
-
-        <aside class="showcase-info">
-
-            <span class="showcase-badge">
-                AI • RAG • KNOWLEDGE ASSISTANT
-            </span>
-
-            <h3>
-                Employee Handbook
-                <span>Intelligence.</span>
-            </h3>
-
-            <p>
-                A conversational AI assistant that retrieves
-                relevant information from the MvM Technologies
-                Employee Handbook and provides grounded answers.
-            </p>
-
-            <div class="technology-list">
-
-                <span>LangChain</span>
-                <span>FAISS</span>
-                <span>Embeddings</span>
-                <span>Ollama</span>
-
-            </div>
-
-        </aside>
-
     </main>
 
 
+
+    <!-- =====================================================
+         JAVASCRIPT
+    ====================================================== -->
+
     <script src="script.js"></script>
+
 
 </body>
 
