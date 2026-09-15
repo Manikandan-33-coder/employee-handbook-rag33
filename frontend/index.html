@@ -1,52 +1,39 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <meta
-        name="description"
-        content="MvM Technologies Employee Handbook AI Assistant"
-    >
+    <meta name="description" content="MvM Technologies Employee Handbook AI Assistant">
 
     <title>MvM Technologies | Handbook AI</title>
 
-    <link
-        rel="stylesheet"
-        href="style.css"
-    >
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-    <!-- =====================================================
-         BACKGROUND
-    ====================================================== -->
-
+    <!-- Background -->
     <div class="background-glow glow-one"></div>
     <div class="background-glow glow-two"></div>
 
 
     <!-- =====================================================
-         MAIN PAGE
+         Desktop Showcase
     ====================================================== -->
 
     <main class="page">
 
         <!-- =================================================
-             PHONE / APP FRAME
+             Mobile App Frame
         ================================================== -->
 
         <section class="phone-frame">
 
             <!-- =============================================
-                 HEADER
+                 Header
             ============================================== -->
 
             <header class="app-header">
@@ -75,21 +62,11 @@
                 <div class="header-right">
 
                     <div class="online-status">
-
                         <span class="online-dot"></span>
-
                         Online
-
                     </div>
 
-
-                    <button
-                        type="button"
-                        id="clearChat"
-                        class="icon-button"
-                        title="Clear conversation"
-                        aria-label="Clear conversation"
-                    >
+                    <button type="button" id="clearChat" class="icon-button" title="Clear conversation">
                         ↻
                     </button>
 
@@ -99,15 +76,12 @@
 
 
             <!-- =============================================
-                 CHAT AREA
+                 Chat Area
             ============================================== -->
 
             <div class="chat-area">
 
-                <!-- =========================================
-                     WELCOME
-                ========================================== -->
-
+                <!-- Welcome -->
                 <section class="welcome">
 
                     <div class="ai-orb">
@@ -139,16 +113,12 @@
 
 
                 <!-- =========================================
-                     QUICK QUESTIONS
+                     Suggested Questions
                 ========================================== -->
 
                 <section class="quick-actions">
 
-                    <button
-                        type="button"
-                        class="quick-card"
-                        data-question="What are the working hours?"
-                    >
+                    <button type="button" class="quick-card" data-question="What are the working hours?">
 
                         <div class="quick-icon">
                             ⏱
@@ -173,11 +143,7 @@
                     </button>
 
 
-                    <button
-                        type="button"
-                        class="quick-card"
-                        data-question="How many casual leave days are available?"
-                    >
+                    <button type="button" class="quick-card" data-question="How many casual leave days are available?">
 
                         <div class="quick-icon">
                             ◴
@@ -202,11 +168,7 @@
                     </button>
 
 
-                    <button
-                        type="button"
-                        class="quick-card"
-                        data-question="What is the notice period?"
-                    >
+                    <button type="button" class="quick-card" data-question="What is the notice period?">
 
                         <div class="quick-icon">
                             ◫
@@ -231,11 +193,7 @@
                     </button>
 
 
-                    <button
-                        type="button"
-                        class="quick-card"
-                        data-question="Can I share my password with a colleague?"
-                    >
+                    <button type="button" class="quick-card" data-question="Can I share my password with a colleague?">
 
                         <div class="quick-icon">
                             ◈
@@ -263,25 +221,19 @@
 
 
                 <!-- =========================================
-                     CHAT MESSAGES
+                     Messages
                 ========================================== -->
 
-                <section
-                    id="chatMessages"
-                    class="chat-messages"
-                    aria-live="polite"
-                >
+                <section id="chatMessages" class="chat-messages" aria-live="polite">
+                    <!-- JavaScript messages -->
                 </section>
 
 
                 <!-- =========================================
-                     LOADING
+                     Loading
                 ========================================== -->
 
-                <div
-                    id="loading"
-                    class="loading hidden"
-                >
+                <div id="loading" class="loading hidden">
 
                     <div class="message-avatar">
                         ✦
@@ -309,16 +261,12 @@
 
 
             <!-- =============================================
-                 INPUT AREA
+                 Input Area
             ============================================== -->
 
             <footer class="input-area">
 
-                <form
-                    id="questionForm"
-                    class="question-form"
-                    novalidate
-                >
+                <form id="questionForm" class="question-form">
 
                     <div class="input-wrapper">
 
@@ -326,27 +274,18 @@
                             ✦
                         </span>
 
-                        <input
-                            type="text"
-                            id="questionInput"
-                            name="question"
-                            placeholder="Ask the handbook..."
-                            autocomplete="off"
-                            autocapitalize="sentences"
-                            spellcheck="true"
-                            required
-                        >
+                        <input type="text" id="questionInput" placeholder="Ask the handbook..." autocomplete="off"
+                            required>
 
                     </div>
 
 
-                    <button
-                        type="submit"
-                        id="askButton"
-                        class="send-button"
-                        aria-label="Send question"
-                    >
-                        →
+                    <button type="submit" id="askButton" class="send-button">
+
+                        <span>
+                            →
+                        </span>
+
                     </button>
 
                 </form>
@@ -372,7 +311,7 @@
 
 
             <!-- =============================================
-                 BOTTOM NAVIGATION
+                 Bottom Navigation
             ============================================== -->
 
             <nav class="bottom-nav">
@@ -411,7 +350,7 @@
 
 
         <!-- =================================================
-             DESKTOP SHOWCASE
+             Desktop Information
         ================================================== -->
 
         <aside class="showcase-info">
@@ -420,19 +359,16 @@
                 AI • RAG • KNOWLEDGE ASSISTANT
             </span>
 
-
             <h3>
                 Employee Handbook
                 <span>Intelligence.</span>
             </h3>
-
 
             <p>
                 A conversational AI assistant that retrieves
                 relevant information from the MvM Technologies
                 Employee Handbook and provides grounded answers.
             </p>
-
 
             <div class="technology-list">
 
@@ -448,13 +384,8 @@
     </main>
 
 
-    <!-- =====================================================
-         JAVASCRIPT
-    ====================================================== -->
-
     <script src="script.js"></script>
 
 </body>
 
 </html>
-```
