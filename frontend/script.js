@@ -1,10 +1,15 @@
-javascript
+
 // =========================================================
-// FastAPI Backend URL
+// Employee Handbook AI - Frontend
 // =========================================================
 
-// Local development
-const API_URL = "https://employee-handbook-rag33-6.onrender.com/ask";
+
+// =========================================================
+// Backend API
+// =========================================================
+
+const API_URL =
+    "https://employee-handbook-rag33-6.onrender.com/ask";
 
 
 // =========================================================
@@ -29,33 +34,48 @@ const loading =
 const clearChatButton =
     document.getElementById("clearChat");
 
-
-// IMPORTANT:
-// HTML uses class="quick-card"
-const quickCards =
-    document.querySelectorAll(".quick-card");
+const welcome =
+    document.getElementById("welcome");
 
 
 // =========================================================
 // Check Elements
 // =========================================================
 
-console.log("Employee Handbook AI loaded.");
+console.log("========================================");
+console.log("Employee Handbook AI loaded");
+console.log("API:", API_URL);
+console.log("Form:", questionForm);
+console.log("Input:", questionInput);
+console.log("Button:", askButton);
+console.log("Messages:", chatMessages);
+console.log("Loading:", loading);
+console.log("========================================");
 
-console.log(
-    "Question input:",
-    questionInput
-);
 
-console.log(
-    "Question form:",
-    questionForm
-);
+// =========================================================
+// Validate Required Elements
+// =========================================================
 
-console.log(
-    "Quick cards:",
-    quickCards
-);
+if (!questionForm) {
+    console.error("ERROR: questionForm not found.");
+}
+
+if (!questionInput) {
+    console.error("ERROR: questionInput not found.");
+}
+
+if (!askButton) {
+    console.error("ERROR: askButton not found.");
+}
+
+if (!chatMessages) {
+    console.error("ERROR: chatMessages not found.");
+}
+
+if (!loading) {
+    console.error("ERROR: loading not found.");
+}
 
 
 // =========================================================
@@ -64,34 +84,55 @@ console.log(
 
 function addMessage(message, sender) {
 
+    if (!chatMessages) {
+        return;
+    }
+
+    const messageText =
+        String(message ?? "").trim();
+
+    if (!messageText) {
+        return;
+    }
+
+
+    // Create message wrapper
     const messageWrapper =
         document.createElement("div");
 
-    messageWrapper.classList.add(
-        "message",
-        sender
-    );
+    messageWrapper.className =
+        `message ${sender}`;
 
 
+    // Create message content
     const messageContent =
         document.createElement("div");
 
-    messageContent.classList.add(
-        "message-content"
-    );
+    messageContent.className =
+        "message-content";
 
 
+    // Set message
     messageContent.textContent =
-        String(message ?? "");
+        messageText;
 
 
+    // Add content to wrapper
     messageWrapper.appendChild(
         messageContent
     );
 
+
+    // Add message to chat
     chatMessages.appendChild(
         messageWrapper
     );
+
+
+    // Hide welcome screen after first message
+    if (welcome) {
+        welcome.style.display = "none";
+    }
 
 
     // Scroll to latest message
@@ -106,18 +147,17 @@ function addMessage(message, sender) {
 
 function showLoading() {
 
-    loading.classList.remove("hidden");
+    if (loading) {
+        loading.classList.remove("hidden");
+    }
 
-    askButton.disabled = true;
+    if (askButton) {
+        askButton.disabled = true;
+    }
 
-    questionInput.disabled = true;
-
-
-    quickCards.forEach(
-        card => {
-            card.disabled = true;
-        }
-    );
+    if (questionInput) {
+        questionInput.disabled = true;
+    }
 }
 
 
@@ -127,59 +167,74 @@ function showLoading() {
 
 function hideLoading() {
 
-    loading.classList.add("hidden");
+    if (loading) {
+        loading.classList.add("hidden");
+    }
 
-    askButton.disabled = false;
+    if (askButton) {
+        askButton.disabled = false;
+    }
 
-    questionInput.disabled = false;
-
-
-    quickCards.forEach(
-        card => {
-            card.disabled = false;
-        }
-    );
-
-
-    questionInput.focus();
+    if (questionInput) {
+        questionInput.disabled = false;
+        questionInput.focus();
+    }
 }
 
 
 // =========================================================
-// Send Question to FastAPI
+// Ask Backend
 // =========================================================
 
 async function askQuestion(question) {
 
     const cleanQuestion =
-        String(question).trim();
+        String(question ?? "").trim();
 
 
+    // Do nothing for empty question
     if (!cleanQuestion) {
         return;
     }
 
 
+    // -----------------------------------------------------
+    // Show user message FIRST
+    // -----------------------------------------------------
+
+    addMessage(
+        cleanQuestion,
+        "user"
+    );
+
+
+    // Clear input
+    if (questionInput) {
+        questionInput.value = "";
+    }
+
+
+    // Show loading
+    showLoading();
+
+
     try {
 
-        // Display user question
-        addMessage(
-            cleanQuestion,
-            "user"
+        console.log(
+            "Sending request to:",
+            API_URL
         );
 
-
-        // Show loading
-        showLoading();
-
-
         console.log(
-            "Sending question:",
+            "Question:",
             cleanQuestion
         );
 
 
-        // Send request to FastAPI
+        // -------------------------------------------------
+        // Call FastAPI
+        // -------------------------------------------------
+
         const response =
             await fetch(
                 API_URL,
@@ -187,6 +242,9 @@ async function askQuestion(question) {
                     method: "POST",
 
                     headers: {
+                        "Accept":
+                            "application/json",
+
                         "Content-Type":
                             "application/json"
                     },
@@ -199,24 +257,47 @@ async function askQuestion(question) {
             );
 
 
+        console.log(
+            "Backend status:",
+            response.status
+        );
+
+
+        // -------------------------------------------------
         // Read response
+        // -------------------------------------------------
+
         const data =
-            await response
-                .json()
+            await response.json()
                 .catch(() => null);
 
 
+        console.log(
+            "Backend response:",
+            data
+        );
+
+
+        // -------------------------------------------------
         // Handle HTTP errors
+        // -------------------------------------------------
+
         if (!response.ok) {
 
-            throw new Error(
+            const errorMessage =
                 data?.detail ||
-                `Server error: ${response.status}`
+                `Server error: ${response.status}`;
+
+            throw new Error(
+                errorMessage
             );
         }
 
 
-        // Validate answer
+        // -------------------------------------------------
+        // Validate response
+        // -------------------------------------------------
+
         if (
             !data ||
             typeof data.answer !== "string"
@@ -228,7 +309,10 @@ async function askQuestion(question) {
         }
 
 
-        // Display AI response
+        // -------------------------------------------------
+        // Display AI answer
+        // -------------------------------------------------
+
         addMessage(
             data.answer,
             "assistant"
@@ -243,6 +327,7 @@ async function askQuestion(question) {
         );
 
 
+        // Show useful error in chat
         addMessage(
             `Sorry, something went wrong: ${error.message}`,
             "assistant"
@@ -271,6 +356,8 @@ if (
 
             event.preventDefault();
 
+            event.stopPropagation();
+
 
             const question =
                 questionInput.value.trim();
@@ -284,11 +371,6 @@ if (
             }
 
 
-            // Clear input
-            questionInput.value = "";
-
-
-            // Ask question
             await askQuestion(
                 question
             );
@@ -307,12 +389,13 @@ if (questionInput) {
         "keydown",
         function(event) {
 
+            // Enter without Shift
             if (
-                event.key === "Enter"
+                event.key === "Enter" &&
+                !event.shiftKey
             ) {
 
                 event.preventDefault();
-
 
                 if (
                     questionInput.value.trim()
@@ -327,46 +410,6 @@ if (questionInput) {
 
 
 // =========================================================
-// Quick Question Cards
-// =========================================================
-
-quickCards.forEach(
-    card => {
-
-        card.addEventListener(
-            "click",
-            async function() {
-
-                const question =
-                    card.dataset.question;
-
-
-                if (!question) {
-                    return;
-                }
-
-
-                // Put question into input
-                questionInput.value =
-                    question;
-
-
-                // Send question
-                await askQuestion(
-                    question
-                );
-
-
-                // Clear input after sending
-                questionInput.value = "";
-
-            }
-        );
-    }
-);
-
-
-// =========================================================
 // Clear Chat
 // =========================================================
 
@@ -376,15 +419,29 @@ if (clearChatButton) {
         "click",
         function() {
 
-            chatMessages.innerHTML = "";
+            if (chatMessages) {
+                chatMessages.innerHTML = "";
+            }
 
-            questionInput.value = "";
 
-            questionInput.disabled = false;
+            if (welcome) {
+                welcome.style.display = "";
+            }
 
-            askButton.disabled = false;
 
-            questionInput.focus();
+            if (questionInput) {
+
+                questionInput.value = "";
+
+                questionInput.disabled = false;
+
+                questionInput.focus();
+            }
+
+
+            if (askButton) {
+                askButton.disabled = false;
+            }
 
         }
     );
@@ -399,14 +456,25 @@ window.addEventListener(
     "load",
     function() {
 
+        console.log(
+            "Frontend initialization complete."
+        );
+
+
         if (questionInput) {
 
             questionInput.disabled = false;
 
-            askButton.disabled = false;
+            questionInput.readOnly = false;
 
             questionInput.focus();
         }
+
+
+        if (askButton) {
+            askButton.disabled = false;
+        }
+
     }
 );
 
