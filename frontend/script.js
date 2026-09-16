@@ -1,7 +1,9 @@
+```javascript
 // =========================================================
 // FastAPI Backend URL
 // =========================================================
 
+// Local development
 const API_URL = "http://127.0.0.1:8000/ask";
 
 
@@ -9,27 +11,61 @@ const API_URL = "http://127.0.0.1:8000/ask";
 // Get HTML Elements
 // =========================================================
 
-const questionForm = document.getElementById("questionForm");
-const questionInput = document.getElementById("questionInput");
-const askButton = document.getElementById("askButton");
+const questionForm =
+    document.getElementById("questionForm");
 
-const chatMessages = document.getElementById("chatMessages");
-const loading = document.getElementById("loading");
+const questionInput =
+    document.getElementById("questionInput");
 
-const clearChatButton = document.getElementById("clearChat");
+const askButton =
+    document.getElementById("askButton");
 
-const suggestionCards = document.querySelectorAll(
-    ".suggestion-card"
+const chatMessages =
+    document.getElementById("chatMessages");
+
+const loading =
+    document.getElementById("loading");
+
+const clearChatButton =
+    document.getElementById("clearChat");
+
+
+// IMPORTANT:
+// HTML uses class="quick-card"
+const quickCards =
+    document.querySelectorAll(".quick-card");
+
+
+// =========================================================
+// Check Elements
+// =========================================================
+
+console.log("Employee Handbook AI loaded.");
+
+console.log(
+    "Question input:",
+    questionInput
+);
+
+console.log(
+    "Question form:",
+    questionForm
+);
+
+console.log(
+    "Quick cards:",
+    quickCards
 );
 
 
 // =========================================================
-// Add Message to Chat
+// Add Message
 // =========================================================
 
 function addMessage(message, sender) {
 
-    const messageWrapper = document.createElement("div");
+    const messageWrapper =
+        document.createElement("div");
 
     messageWrapper.classList.add(
         "message",
@@ -37,18 +73,25 @@ function addMessage(message, sender) {
     );
 
 
-    const messageContent = document.createElement("div");
+    const messageContent =
+        document.createElement("div");
 
     messageContent.classList.add(
         "message-content"
     );
 
-    messageContent.textContent = message;
+
+    messageContent.textContent =
+        String(message ?? "");
 
 
-    messageWrapper.appendChild(messageContent);
+    messageWrapper.appendChild(
+        messageContent
+    );
 
-    chatMessages.appendChild(messageWrapper);
+    chatMessages.appendChild(
+        messageWrapper
+    );
 
 
     // Scroll to latest message
@@ -69,9 +112,11 @@ function showLoading() {
 
     questionInput.disabled = true;
 
-    // Disable suggestion cards while processing
-    suggestionCards.forEach(
-        card => card.disabled = true
+
+    quickCards.forEach(
+        card => {
+            card.disabled = true;
+        }
     );
 }
 
@@ -88,10 +133,13 @@ function hideLoading() {
 
     questionInput.disabled = false;
 
-    // Enable suggestion cards
-    suggestionCards.forEach(
-        card => card.disabled = false
+
+    quickCards.forEach(
+        card => {
+            card.disabled = false;
+        }
     );
+
 
     questionInput.focus();
 }
@@ -103,53 +151,81 @@ function hideLoading() {
 
 async function askQuestion(question) {
 
+    const cleanQuestion =
+        String(question).trim();
+
+
+    if (!cleanQuestion) {
+        return;
+    }
+
+
     try {
-
-        showLoading();
-
 
         // Display user question
         addMessage(
-            question,
+            cleanQuestion,
             "user"
         );
 
 
-        // Send request to FastAPI
-        const response = await fetch(
-            API_URL,
-            {
-                method: "POST",
+        // Show loading
+        showLoading();
 
-                headers: {
-                    "Content-Type": "application/json"
-                },
 
-                body: JSON.stringify({
-                    question: question
-                })
-            }
+        console.log(
+            "Sending question:",
+            cleanQuestion
         );
+
+
+        // Send request to FastAPI
+        const response =
+            await fetch(
+                API_URL,
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body: JSON.stringify({
+                        question:
+                            cleanQuestion
+                    })
+                }
+            );
+
+
+        // Read response
+        const data =
+            await response
+                .json()
+                .catch(() => null);
 
 
         // Handle HTTP errors
         if (!response.ok) {
 
-            const errorData =
-                await response
-                    .json()
-                    .catch(() => null);
-
             throw new Error(
-                errorData?.detail ||
+                data?.detail ||
                 `Server error: ${response.status}`
             );
         }
 
 
-        // Read JSON response
-        const data =
-            await response.json();
+        // Validate answer
+        if (
+            !data ||
+            typeof data.answer !== "string"
+        ) {
+
+            throw new Error(
+                "Invalid response from backend."
+            );
+        }
 
 
         // Display AI response
@@ -176,7 +252,6 @@ async function askQuestion(question) {
     } finally {
 
         hideLoading();
-
     }
 }
 
@@ -185,44 +260,82 @@ async function askQuestion(question) {
 // Form Submit
 // =========================================================
 
-questionForm.addEventListener(
-    "submit",
-    async function (event) {
+if (
+    questionForm &&
+    questionInput
+) {
 
-        event.preventDefault();
+    questionForm.addEventListener(
+        "submit",
+        async function(event) {
+
+            event.preventDefault();
 
 
-        const question =
-            questionInput.value.trim();
+            const question =
+                questionInput.value.trim();
 
 
-        // Ignore empty questions
-        if (!question) {
-            return;
+            if (!question) {
+
+                questionInput.focus();
+
+                return;
+            }
+
+
+            // Clear input
+            questionInput.value = "";
+
+
+            // Ask question
+            await askQuestion(
+                question
+            );
         }
-
-
-        // Clear input
-        questionInput.value = "";
-
-
-        // Ask question
-        await askQuestion(question);
-
-    }
-);
+    );
+}
 
 
 // =========================================================
-// Suggested Question Cards
+// Enter Key
 // =========================================================
 
-suggestionCards.forEach(
+if (questionInput) {
+
+    questionInput.addEventListener(
+        "keydown",
+        function(event) {
+
+            if (
+                event.key === "Enter"
+            ) {
+
+                event.preventDefault();
+
+
+                if (
+                    questionInput.value.trim()
+                ) {
+
+                    questionForm.requestSubmit();
+                }
+            }
+        }
+    );
+}
+
+
+// =========================================================
+// Quick Question Cards
+// =========================================================
+
+quickCards.forEach(
     card => {
 
         card.addEventListener(
             "click",
-            async function () {
+            async function() {
 
                 const question =
                     card.dataset.question;
@@ -238,18 +351,17 @@ suggestionCards.forEach(
                     question;
 
 
-                // Clear input after selecting
-                questionInput.value = "";
-
-
                 // Send question
                 await askQuestion(
                     question
                 );
 
+
+                // Clear input after sending
+                questionInput.value = "";
+
             }
         );
-
     }
 );
 
@@ -262,15 +374,39 @@ if (clearChatButton) {
 
     clearChatButton.addEventListener(
         "click",
-        function () {
+        function() {
 
             chatMessages.innerHTML = "";
 
             questionInput.value = "";
 
+            questionInput.disabled = false;
+
+            askButton.disabled = false;
+
             questionInput.focus();
 
         }
     );
-
 }
+
+
+// =========================================================
+// Initial State
+// =========================================================
+
+window.addEventListener(
+    "load",
+    function() {
+
+        if (questionInput) {
+
+            questionInput.disabled = false;
+
+            askButton.disabled = false;
+
+            questionInput.focus();
+        }
+    }
+);
+```
