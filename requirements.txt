@@ -1,20 +1,45 @@
+```text
 --extra-index-url https://download.pytorch.org/whl/cpu
+
+# =========================================================
+# LangChain
+# =========================================================
 
 langchain
 langchain-community
 langchain-core
 langchain-text-splitters
 langchain-huggingface
+langchain-ollama
+
+
+# =========================================================
+# Embeddings / Vector Database
+# =========================================================
 
 sentence-transformers
 faiss-cpu
 
+
+# =========================================================
+# PDF / Environment
+# =========================================================
+
 pypdf
 python-dotenv
+
+
+# =========================================================
+# FastAPI
+# =========================================================
 
 fastapi
 uvicorn
 
-torch==2.5.1+cpu
 
-langchain-ollama
+# =========================================================
+# PyTorch - CPU
+# =========================================================
+
+torch==2.5.1+cpu
+```
