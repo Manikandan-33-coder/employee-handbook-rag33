@@ -4,8 +4,7 @@ javascript
 // =========================================================
 
 // Local development
-const API_URL =
-    "https://employee-handbook-rag33-4.onrender.com/ask";
+const API_URL = "https://employee-handbook-rag33-6.onrender.com/ask";
 
 
 // =========================================================
