@@ -10,7 +10,6 @@ langchain-community
 langchain-core
 langchain-text-splitters
 langchain-huggingface
-langchain-ollama
 
 
 # =========================================================
@@ -35,6 +34,13 @@ python-dotenv
 
 fastapi
 uvicorn
+
+
+# =========================================================
+# Groq
+# =========================================================
+
+groq
 
 
 # =========================================================
