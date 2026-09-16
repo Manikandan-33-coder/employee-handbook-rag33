@@ -35,18 +35,30 @@ def create_vectorstore(chunks, embeddings):
     print(f"Number of chunks : {len(chunks)}")
     print(f"FAISS path       : {FAISS_PATH}")
 
+    # Create FAISS vector store
     vectorstore = FAISS.from_documents(
         documents=chunks,
         embedding=embeddings,
     )
 
-    # Ensure parent directory exists
+    # Make sure the parent directory exists
     FAISS_PATH.parent.mkdir(
         parents=True,
         exist_ok=True,
     )
 
-    # Save FAISS index locally
+    # ---------------------------------------------------------
+    # IMPORTANT
+    #
+    # FAISS.save_local("vector_db/faiss_index")
+    # creates:
+    #
+    # vector_db/
+    # └── faiss_index/
+    #     ├── index.faiss
+    #     └── index.pkl
+    # ---------------------------------------------------------
+
     vectorstore.save_local(
         str(FAISS_PATH)
     )
@@ -71,34 +83,46 @@ def load_vectorstore(embeddings):
             "Embedding model is required to load the vector store."
         )
 
-    # FAISS.save_local() creates:
+    # ---------------------------------------------------------
+    # FAISS_PATH points to the directory:
     #
     # vector_db/faiss_index/
-    #     index.faiss
-    #     index.pkl
     #
-    index_file = Path(
-        str(FAISS_PATH) + ".faiss"
-    )
+    # Therefore the actual files are:
+    #
+    # vector_db/faiss_index/index.faiss
+    # vector_db/faiss_index/index.pkl
+    # ---------------------------------------------------------
 
-    pickle_file = Path(
-        str(FAISS_PATH) + ".pkl"
-    )
+    index_directory = Path(FAISS_PATH)
 
+    index_file = index_directory / "index.faiss"
+    metadata_file = index_directory / "index.pkl"
+
+    print("=" * 60)
+    print("Checking FAISS vector store...")
+    print(f"FAISS directory : {index_directory}")
+    print(f"FAISS index     : {index_file}")
+    print(f"FAISS metadata  : {metadata_file}")
+
+    # Check FAISS index
     if not index_file.exists():
+
         raise FileNotFoundError(
             f"FAISS index file not found: {index_file}"
         )
 
-    if not pickle_file.exists():
+    # Check metadata
+    if not metadata_file.exists():
+
         raise FileNotFoundError(
-            f"FAISS metadata file not found: {pickle_file}"
+            f"FAISS metadata file not found: {metadata_file}"
         )
 
-    print("=" * 60)
+    print("FAISS files found.")
     print("Loading FAISS vector store...")
-    print(f"FAISS path : {FAISS_PATH}")
 
+    # Load FAISS index
     vectorstore = FAISS.load_local(
         str(FAISS_PATH),
         embeddings,
