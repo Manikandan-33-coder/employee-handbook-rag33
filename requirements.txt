@@ -17,4 +17,4 @@ uvicorn
 
 torch==2.5.1+cpu
 
-google-genai
+langchain-ollama
