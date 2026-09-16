@@ -37,13 +37,20 @@ async def lifespan(app: FastAPI):
     print("Loading FAISS vector store...")
 
     try:
+
         retriever = get_retriever()
 
         print("Retriever loaded successfully.")
 
     except Exception as e:
-        print(f"Failed to load retriever: {e}")
+
+        print("=" * 60)
+        print("STARTUP ERROR")
+        print(f"Error type : {type(e).__name__}")
+        print(f"Error      : {e}")
         traceback.print_exc()
+        print("=" * 60)
+
         raise
 
     yield
@@ -69,11 +76,17 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
+
     allow_origins=[
         "https://employee-handbook-rag33-7.onrender.com",
+        "http://localhost:5500",
+        "http://127.0.0.1:5500",
     ],
+
     allow_credentials=True,
+
     allow_methods=["*"],
+
     allow_headers=["*"],
 )
 
@@ -92,6 +105,7 @@ class QuestionRequest(BaseModel):
 
 @app.get("/")
 def root():
+
     return {
         "message": "MvM Technologies Employee Handbook RAG API is running."
     }
@@ -119,11 +133,13 @@ def ask_question(request: QuestionRequest):
 
     question = request.question.strip()
 
+
     # -----------------------------------------------------
-    # Empty question
+    # Validate question
     # -----------------------------------------------------
 
     if not question:
+
         raise HTTPException(
             status_code=400,
             detail="Question cannot be empty.",
@@ -131,10 +147,11 @@ def ask_question(request: QuestionRequest):
 
 
     # -----------------------------------------------------
-    # Retriever check
+    # Check RAG system
     # -----------------------------------------------------
 
     if retriever is None:
+
         raise HTTPException(
             status_code=503,
             detail="RAG system is not ready.",
@@ -165,6 +182,7 @@ def ask_question(request: QuestionRequest):
 
     except Exception as e:
 
+        # Keep detailed error in Render logs
         print("\n" + "=" * 60)
         print("ASK ERROR")
         print(f"Error type : {type(e).__name__}")
@@ -172,11 +190,10 @@ def ask_question(request: QuestionRequest):
         traceback.print_exc()
         print("=" * 60)
 
-        # TEMPORARY DEBUG RESPONSE
-        # Remove detailed error information after
-        # the production issue is fixed.
+
+        # Safe message for API users
         raise HTTPException(
             status_code=500,
-            detail=f"{type(e).__name__}: {str(e)}",
+            detail="Failed to generate answer.",
         )
 
