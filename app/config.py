@@ -1,3 +1,4 @@
+
 # =========================================================
 # app/config.py
 # =========================================================
@@ -19,6 +20,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # 2. Load Environment Variables
 # =========================================================
 
+# Loads variables from .env when running locally.
+# On Render, environment variables configured in the
+# Render dashboard are also available through os.getenv().
 load_dotenv(BASE_DIR / ".env")
 
 
@@ -55,7 +59,7 @@ EMBEDDING_MODEL = os.getenv(
 
 
 # =========================================================
-# 6. Ollama LLM Configuration
+# 6. LLM Configuration
 # =========================================================
 
 LLM_MODEL = os.getenv(
@@ -64,6 +68,16 @@ LLM_MODEL = os.getenv(
 )
 
 
+# IMPORTANT:
+# Do NOT rely on localhost for a cloud deployment unless
+# Ollama is running inside the same Render service.
+#
+# For local development:
+#     OLLAMA_BASE_URL=http://localhost:11434
+#
+# For Render:
+#     Set OLLAMA_BASE_URL to a reachable Ollama server URL
+#     in Render Environment Variables.
 OLLAMA_BASE_URL = os.getenv(
     "OLLAMA_BASE_URL",
     "http://localhost:11434"
@@ -74,13 +88,29 @@ OLLAMA_BASE_URL = os.getenv(
 # 7. Text Splitting Configuration
 # =========================================================
 
-CHUNK_SIZE = 400
+CHUNK_SIZE = int(
+    os.getenv(
+        "CHUNK_SIZE",
+        "400"
+    )
+)
 
-CHUNK_OVERLAP = 50
+CHUNK_OVERLAP = int(
+    os.getenv(
+        "CHUNK_OVERLAP",
+        "50"
+    )
+)
 
 
 # =========================================================
 # 8. Retrieval Configuration
 # =========================================================
 
-TOP_K = 2
+TOP_K = int(
+    os.getenv(
+        "TOP_K",
+        "2"
+    )
+)
+
