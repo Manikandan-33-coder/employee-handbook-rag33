@@ -1,10 +1,11 @@
-```javascript
+javascript
 // =========================================================
 // FastAPI Backend URL
 // =========================================================
 
 // Local development
-const API_URL = "http://127.0.0.1:8000/ask";
+const API_URL =
+    "https://employee-handbook-rag33-4.onrender.com/ask";
 
 
 // =========================================================
@@ -409,4 +410,4 @@ window.addEventListener(
         }
     }
 );
-```
+
