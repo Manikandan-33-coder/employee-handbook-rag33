@@ -100,7 +100,7 @@ CHUNK_OVERLAP = int(
 TOP_K = int(
     os.getenv(
         "TOP_K",
-        "2"
+        "4"
     )
 )
 
