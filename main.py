@@ -1,113 +1,159 @@
-# app/rag_pipeline.py
+# main.py
 
-import os
-import time
+from contextlib import asynccontextmanager
 
-from google import genai
+from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
 
-from app.config import GEMINI_MODEL
-from app.prompts import SYSTEM_PROMPT
-
-
-api_key = os.getenv("GEMINI_API_KEY")
-
-if not api_key:
-    raise RuntimeError(
-        "GEMINI_API_KEY is not configured."
-    )
+from app.retriever import get_retriever
+from app.rag_pipeline import generate_answer
 
 
-client = genai.Client(
-    api_key=api_key
+# =========================================================
+# Global Retriever
+# =========================================================
+
+retriever = None
+
+
+# =========================================================
+# Application Startup / Shutdown
+# =========================================================
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+
+    global retriever
+
+    print("=" * 60)
+    print("Starting MvM Technologies Employee Handbook RAG")
+    print("=" * 60)
+
+    print("Loading FAISS vector store...")
+
+    try:
+        retriever = get_retriever()
+
+        print("Retriever loaded successfully.")
+
+    except Exception as e:
+
+        print(f"Failed to load retriever: {e}")
+        raise
+
+    yield
+
+    print("Application shutting down...")
+
+
+# =========================================================
+# FastAPI Application
+# =========================================================
+
+app = FastAPI(
+    title="MvM Technologies Employee Handbook RAG",
+    description="AI-powered Employee Handbook Assistant",
+    version="1.0.0",
+    lifespan=lifespan
 )
 
 
-def generate_answer(question, retriever):
+# =========================================================
+# CORS
+# =========================================================
 
-    total_start = time.perf_counter()
+app.add_middleware(
+    CORSMiddleware,
 
-    # ---------------------------------------------------------
-    # 1. Retrieve relevant documents
-    # ---------------------------------------------------------
+    # For development.
+    # Later, replace "*" with your Render frontend URL.
+    allow_origins=["*"],
 
-    retrieval_start = time.perf_counter()
+    allow_credentials=True,
 
-    documents = retriever.invoke(question)
+    allow_methods=["*"],
 
-    retrieval_time = (
-        time.perf_counter() - retrieval_start
-    )
+    allow_headers=["*"],
+)
 
-    print("\n" + "=" * 60)
-    print(
-        f"Retrieval Time   : "
-        f"{retrieval_time:.2f} seconds"
-    )
 
-    print(
-        f"Chunks Retrieved : "
-        f"{len(documents)}"
-    )
+# =========================================================
+# Request Model
+# =========================================================
 
-    # ---------------------------------------------------------
-    # 2. Build context
-    # ---------------------------------------------------------
+class QuestionRequest(BaseModel):
+    question: str
 
-    context = "\n\n".join(
-        document.page_content
-        for document in documents
-    )
 
-    print(
-        f"Context Length   : "
-        f"{len(context)} characters"
-    )
+# =========================================================
+# Root Endpoint
+# =========================================================
 
-    # ---------------------------------------------------------
-    # 3. Build prompt
-    # ---------------------------------------------------------
+@app.get("/")
+def root():
 
-    prompt = f"""
-{SYSTEM_PROMPT}
+    return {
+        "message": "MvM Technologies Employee Handbook RAG API is running."
+    }
 
-Context:
-{context}
 
-Question:
-{question}
+# =========================================================
+# Health Check
+# =========================================================
 
-Answer:
-"""
+@app.get("/health")
+def health():
 
-    # ---------------------------------------------------------
-    # 4. Gemini
-    # ---------------------------------------------------------
+    return {
+        "status": "healthy",
+        "retriever_loaded": retriever is not None
+    }
 
-    llm_start = time.perf_counter()
 
-    response = client.models.generate_content(
-        model=GEMINI_MODEL,
-        contents=prompt
-    )
+# =========================================================
+# Ask Question
+# =========================================================
 
-    llm_time = (
-        time.perf_counter() - llm_start
-    )
+@app.post("/ask")
+def ask_question(request: QuestionRequest):
 
-    total_time = (
-        time.perf_counter() - total_start
-    )
+    # Check empty question
+    if not request.question.strip():
 
-    print(
-        f"LLM Time         : "
-        f"{llm_time:.2f} seconds"
-    )
+        raise HTTPException(
+            status_code=400,
+            detail="Question cannot be empty."
+        )
 
-    print(
-        f"Total Time       : "
-        f"{total_time:.2f} seconds"
-    )
 
-    print("=" * 60)
+    # Check retriever
+    if retriever is None:
 
-    return response.text
+        raise HTTPException(
+            status_code=503,
+            detail="RAG system is not ready."
+        )
+
+
+    try:
+
+        answer = generate_answer(
+            question=request.question,
+            retriever=retriever
+        )
+
+        return {
+            "question": request.question,
+            "answer": answer
+        }
+
+
+    except Exception as e:
+
+        print(f"RAG error: {e}")
+
+        raise HTTPException(
+            status_code=500,
+            detail="Failed to generate answer."
+        )
