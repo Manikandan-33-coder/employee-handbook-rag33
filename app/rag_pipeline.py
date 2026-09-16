@@ -6,27 +6,33 @@
 import time
 import traceback
 
-from langchain_ollama import ChatOllama
+from groq import Groq
 
-from app.config import LLM_MODEL, OLLAMA_BASE_URL
+from app.config import GROQ_API_KEY, GROQ_MODEL
 from app.prompts import RAG_PROMPT
 
 
 # =========================================================
-# Create LLM once
+# Validate Groq Configuration
+# =========================================================
+
+if not GROQ_API_KEY:
+    raise RuntimeError(
+        "GROQ_API_KEY is not configured."
+    )
+
+
+# =========================================================
+# Create Groq Client Once
 # =========================================================
 
 print("=" * 60)
-print("Initializing Ollama LLM")
-print(f"LLM Model       : {LLM_MODEL}")
-print(f"Ollama Base URL : {OLLAMA_BASE_URL}")
+print("Initializing Groq LLM")
+print(f"Groq Model : {GROQ_MODEL}")
 print("=" * 60)
 
-
-llm = ChatOllama(
-    model=LLM_MODEL,
-    base_url=OLLAMA_BASE_URL,
-    temperature=0,
+groq_client = Groq(
+    api_key=GROQ_API_KEY
 )
 
 
@@ -34,9 +40,13 @@ llm = ChatOllama(
 # Generate Answer
 # =========================================================
 
-def generate_answer(question: str, retriever) -> str:
+def generate_answer(
+    question: str,
+    retriever
+) -> str:
 
     total_start = time.perf_counter()
+
 
     # =====================================================
     # 1. Retrieve Relevant Documents
@@ -46,7 +56,9 @@ def generate_answer(question: str, retriever) -> str:
 
     try:
 
-        documents = retriever.invoke(question)
+        documents = retriever.invoke(
+            question
+        )
 
     except Exception as e:
 
@@ -60,13 +72,24 @@ def generate_answer(question: str, retriever) -> str:
             f"Failed to retrieve documents: {e}"
         ) from e
 
-    retrieval_time = time.perf_counter() - retrieval_start
+
+    retrieval_time = (
+        time.perf_counter()
+        - retrieval_start
+    )
+
 
     print("\n" + "=" * 60)
     print("RAG REQUEST")
     print(f"Question         : {question}")
-    print(f"Retrieval Time   : {retrieval_time:.2f} seconds")
-    print(f"Chunks Retrieved : {len(documents)}")
+    print(
+        f"Retrieval Time   : "
+        f"{retrieval_time:.2f} seconds"
+    )
+    print(
+        f"Chunks Retrieved : "
+        f"{len(documents)}"
+    )
 
 
     # =====================================================
@@ -75,15 +98,21 @@ def generate_answer(question: str, retriever) -> str:
 
     if not documents:
 
-        total_time = time.perf_counter() - total_start
+        total_time = (
+            time.perf_counter()
+            - total_start
+        )
 
-        print("No documents retrieved.")
-        print(f"Total Time       : {total_time:.2f} seconds")
+        print("No relevant documents found.")
+        print(
+            f"Total Time       : "
+            f"{total_time:.2f} seconds"
+        )
         print("=" * 60)
 
         return (
-            "I could not find relevant information in the "
-            "Employee Handbook for this question."
+            "I could not find this information "
+            "in the Employee Handbook."
         )
 
 
@@ -94,19 +123,27 @@ def generate_answer(question: str, retriever) -> str:
     context = "\n\n".join(
         document.page_content
         for document in documents
-        if getattr(document, "page_content", None)
+        if getattr(
+            document,
+            "page_content",
+            None
+        )
     )
 
-    print(f"Context Length   : {len(context)} characters")
+
+    print(
+        f"Context Length   : "
+        f"{len(context)} characters"
+    )
 
 
     # =====================================================
-    # 4. Create Prompt
+    # 4. Create LangChain Prompt
     # =====================================================
 
     try:
 
-        prompt = RAG_PROMPT.invoke(
+        prompt_value = RAG_PROMPT.invoke(
             {
                 "context": context,
                 "question": question,
@@ -127,46 +164,133 @@ def generate_answer(question: str, retriever) -> str:
 
 
     # =====================================================
-    # 5. Generate Answer with Ollama
+    # 5. Convert LangChain Messages to Groq Messages
+    # =====================================================
+
+    try:
+
+        messages = []
+
+        for message in prompt_value.to_messages():
+
+            # LangChain message types:
+            #
+            # SystemMessage -> system
+            # HumanMessage  -> user
+            # AIMessage     -> assistant
+
+            if message.type == "system":
+                role = "system"
+
+            elif message.type == "human":
+                role = "user"
+
+            elif message.type == "ai":
+                role = "assistant"
+
+            else:
+                role = "user"
+
+
+            messages.append(
+                {
+                    "role": role,
+                    "content": str(
+                        message.content
+                    ),
+                }
+            )
+
+    except Exception as e:
+
+        print("\n" + "=" * 60)
+        print("MESSAGE CONVERSION ERROR")
+        print(f"Error: {e}")
+        traceback.print_exc()
+        print("=" * 60)
+
+        raise RuntimeError(
+            f"Failed to prepare Groq messages: {e}"
+        ) from e
+
+
+    # =====================================================
+    # 6. Generate Answer Using Groq
     # =====================================================
 
     llm_start = time.perf_counter()
 
     try:
 
-        response = llm.invoke(prompt)
+        response = (
+            groq_client.chat.completions.create(
+                model=GROQ_MODEL,
+                messages=messages,
+                temperature=0.0,
+                max_completion_tokens=300,
+                stream=False,
+            )
+        )
 
     except Exception as e:
 
-        llm_time = time.perf_counter() - llm_start
+        llm_time = (
+            time.perf_counter()
+            - llm_start
+        )
 
         print("\n" + "=" * 60)
-        print("LLM ERROR")
-        print(f"LLM Model       : {LLM_MODEL}")
-        print(f"Ollama URL      : {OLLAMA_BASE_URL}")
-        print(f"LLM Time        : {llm_time:.2f} seconds")
-        print(f"Error           : {e}")
+        print("GROQ LLM ERROR")
+        print(f"Model       : {GROQ_MODEL}")
+        print(
+            f"LLM Time    : "
+            f"{llm_time:.2f} seconds"
+        )
+        print(f"Error       : {e}")
         traceback.print_exc()
         print("=" * 60)
 
         raise RuntimeError(
-            f"Failed to generate answer using Ollama: {e}"
+            f"Failed to generate answer using Groq: {e}"
         ) from e
 
 
-    llm_time = time.perf_counter() - llm_start
+    llm_time = (
+        time.perf_counter()
+        - llm_start
+    )
 
 
     # =====================================================
-    # 6. Validate LLM Response
+    # 7. Extract Answer
     # =====================================================
 
-    answer = getattr(response, "content", None)
+    try:
+
+        answer = (
+            response
+            .choices[0]
+            .message
+            .content
+        )
+
+    except Exception as e:
+
+        print("\n" + "=" * 60)
+        print("GROQ RESPONSE ERROR")
+        print(f"Error: {e}")
+        traceback.print_exc()
+        print("=" * 60)
+
+        raise RuntimeError(
+            "Groq returned an invalid response."
+        ) from e
+
 
     if not answer:
 
         raise RuntimeError(
-            "LLM returned an empty response."
+            "Groq returned an empty response."
         )
 
 
@@ -174,13 +298,24 @@ def generate_answer(question: str, retriever) -> str:
 
 
     # =====================================================
-    # 7. Total Time
+    # 8. Total Time
     # =====================================================
 
-    total_time = time.perf_counter() - total_start
+    total_time = (
+        time.perf_counter()
+        - total_start
+    )
 
-    print(f"LLM Time         : {llm_time:.2f} seconds")
-    print(f"Total Time       : {total_time:.2f} seconds")
+    print(
+        f"LLM Time         : "
+        f"{llm_time:.2f} seconds"
+    )
+
+    print(
+        f"Total Time       : "
+        f"{total_time:.2f} seconds"
+    )
+
     print("=" * 60)
 
 
