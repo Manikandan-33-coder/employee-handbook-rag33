@@ -1,4 +1,4 @@
-
+```python
 # =========================================================
 # app/config.py
 # =========================================================
@@ -20,9 +20,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # 2. Load Environment Variables
 # =========================================================
 
-# Loads variables from .env when running locally.
-# On Render, environment variables configured in the
-# Render dashboard are also available through os.getenv().
+# Local development:
+# Loads values from .env if that file exists.
+#
+# Render:
+# Uses Environment Variables configured in the Render
+# dashboard.
+
 load_dotenv(BASE_DIR / ".env")
 
 
@@ -59,28 +63,14 @@ EMBEDDING_MODEL = os.getenv(
 
 
 # =========================================================
-# 6. LLM Configuration
+# 6. Groq LLM Configuration
 # =========================================================
 
-LLM_MODEL = os.getenv(
-    "LLM_MODEL",
-    "qwen2.5:1.5b"
-)
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
-
-# IMPORTANT:
-# Do NOT rely on localhost for a cloud deployment unless
-# Ollama is running inside the same Render service.
-#
-# For local development:
-#     OLLAMA_BASE_URL=http://localhost:11434
-#
-# For Render:
-#     Set OLLAMA_BASE_URL to a reachable Ollama server URL
-#     in Render Environment Variables.
-OLLAMA_BASE_URL = os.getenv(
-    "OLLAMA_BASE_URL",
-    "http://localhost:11434"
+GROQ_MODEL = os.getenv(
+    "GROQ_MODEL",
+    "openai/gpt-oss-20b"
 )
 
 
@@ -113,4 +103,4 @@ TOP_K = int(
         "2"
     )
 )
-
+```
