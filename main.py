@@ -1,6 +1,10 @@
+
+# =========================================================
 # main.py
+# =========================================================
 
 from contextlib import asynccontextmanager
+import traceback
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -38,8 +42,8 @@ async def lifespan(app: FastAPI):
         print("Retriever loaded successfully.")
 
     except Exception as e:
-
         print(f"Failed to load retriever: {e}")
+        traceback.print_exc()
         raise
 
     yield
@@ -55,7 +59,7 @@ app = FastAPI(
     title="MvM Technologies Employee Handbook RAG",
     description="AI-powered Employee Handbook Assistant",
     version="1.0.0",
-    lifespan=lifespan
+    lifespan=lifespan,
 )
 
 
@@ -65,15 +69,11 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-
-    # For development.
-    # Later, replace "*" with your Render frontend URL.
-    allow_origins=["*"],
-
+    allow_origins=[
+        "https://employee-handbook-rag33-7.onrender.com",
+    ],
     allow_credentials=True,
-
     allow_methods=["*"],
-
     allow_headers=["*"],
 )
 
@@ -92,7 +92,6 @@ class QuestionRequest(BaseModel):
 
 @app.get("/")
 def root():
-
     return {
         "message": "MvM Technologies Employee Handbook RAG API is running."
     }
@@ -107,7 +106,7 @@ def health():
 
     return {
         "status": "healthy",
-        "retriever_loaded": retriever is not None
+        "retriever_loaded": retriever is not None,
     }
 
 
@@ -118,42 +117,66 @@ def health():
 @app.post("/ask")
 def ask_question(request: QuestionRequest):
 
-    # Check empty question
-    if not request.question.strip():
+    question = request.question.strip()
 
+    # -----------------------------------------------------
+    # Empty question
+    # -----------------------------------------------------
+
+    if not question:
         raise HTTPException(
             status_code=400,
-            detail="Question cannot be empty."
+            detail="Question cannot be empty.",
         )
 
 
-    # Check retriever
-    if retriever is None:
+    # -----------------------------------------------------
+    # Retriever check
+    # -----------------------------------------------------
 
+    if retriever is None:
         raise HTTPException(
             status_code=503,
-            detail="RAG system is not ready."
+            detail="RAG system is not ready.",
         )
 
+
+    # -----------------------------------------------------
+    # Generate answer
+    # -----------------------------------------------------
 
     try:
 
+        print("\n" + "=" * 60)
+        print("ASK REQUEST")
+        print(f"Question: {question}")
+        print("=" * 60)
+
         answer = generate_answer(
-            question=request.question,
-            retriever=retriever
+            question=question,
+            retriever=retriever,
         )
 
         return {
-            "question": request.question,
-            "answer": answer
+            "question": question,
+            "answer": answer,
         }
 
 
     except Exception as e:
 
-        print(f"RAG error: {e}")
+        print("\n" + "=" * 60)
+        print("ASK ERROR")
+        print(f"Error type : {type(e).__name__}")
+        print(f"Error      : {e}")
+        traceback.print_exc()
+        print("=" * 60)
 
+        # TEMPORARY DEBUG RESPONSE
+        # Remove detailed error information after
+        # the production issue is fixed.
         raise HTTPException(
             status_code=500,
-            detail="Failed to generate answer."
+            detail=f"{type(e).__name__}: {str(e)}",
         )
+
